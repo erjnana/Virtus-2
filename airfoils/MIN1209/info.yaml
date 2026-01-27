@@ -1,0 +1,33 @@
+name: MIN1209
+family: Minerva
+
+source:
+  geometry: Internal (Minerva)
+  polars: XFOIL
+
+mach: 0.05
+transition_model: free
+
+reynolds_available:
+  - 3.0e5
+
+alpha_range: [-10, 20]
+alpha_step: 0.5
+
+summary:
+  reynolds: 3.0e5
+  alpha_range_linear: [0.5, 4.5]
+  cl_0: 1.22
+  cl_alpha: 0.12
+  cl_max: 2.38
+  alpha_cl_max: 14.0
+  cm_0: -0.25
+
+validation:
+  stall_model: gentle
+
+notes: >
+  Aerofólio de alto Cl em baixo Reynolds.
+  Cl elevado já próximo de α = 0°.
+  Momento fortemente negativo,
+  indicado para raiz de asa.

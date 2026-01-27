@@ -1,0 +1,32 @@
+name: NACA 0012
+family: NACA 00-series
+
+source:
+  geometry: NACA definition
+  polars: XFOIL
+
+mach: 0.05
+transition_model: free
+
+reynolds_available:
+  - 3.0e5
+
+alpha_range: [-10, 20]
+alpha_step: 0.5
+
+summary:
+  reynolds: 3.0e5
+  alpha_range_linear: [-5.0, 5.0]
+  cl_0: 0.00
+  cl_alpha: 0.125
+  cl_max: 1.13
+  alpha_cl_max: 12.5
+  cm_0: 0.00
+
+validation:
+  stall_model: abrupt
+
+notes: >
+  Aerofólio simétrico clássico.
+  Cm aproximadamente nulo em todo o envelope linear.
+  Boa referência para validação de modelos e cauda.

@@ -1,0 +1,36 @@
+name: MH113
+family: MH
+
+source:
+  geometry: Airfoil Tools
+  polars: XFOIL
+
+mach: 0.05
+transition_model: free
+
+reynolds_available:
+  - 2.0e5
+  - 3.0e5
+  - 4.0e5
+  - 5.0e5
+
+alpha_range: [-10, 20]
+alpha_step: 0.5
+
+summary:
+  reynolds: 3.0e5
+  alpha_range_linear: [-2, 2]
+  cl_0: 0.870
+  cl_alpha: 6.20
+  cl_max: 1.79
+  alpha_cl_max: 15.0
+  cm_0: -0.192
+
+validation:
+  stall_model: gentle
+
+notes: >
+  Aerofólio com alta eficiência em baixos Reynolds,
+  momento negativo elevado e estol progressivo.
+  Bom candidato para asas de alto alongamento,
+  com atenção ao dimensionamento estrutural.

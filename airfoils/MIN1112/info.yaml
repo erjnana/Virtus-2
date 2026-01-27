@@ -1,0 +1,33 @@
+name: MIN1112
+family: Minerva
+
+source:
+  geometry: Internal (Minerva)
+  polars: XFOIL
+
+mach: 0.05
+transition_model: free
+
+reynolds_available:
+  - 3.0e5
+
+alpha_range: [-9, 20]
+alpha_step: 0.5
+
+summary:
+  reynolds: 3.0e5
+  alpha_range_linear: [-2, 2]
+  cl_0: 1.22
+  cl_alpha: 6.10
+  cl_max: 2.39
+  alpha_cl_max: 12.0
+  cm_0: -0.270
+
+validation:
+  stall_model: gentle
+
+notes: >
+  Aerofólio de altíssimo Cl em baixo Reynolds,
+  momento fortemente negativo.
+  Estol progressivo, adequado para raiz de asa
+  com forte penalização estrutural em Cm.

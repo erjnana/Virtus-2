@@ -1,0 +1,2 @@
+Versão C: O c se refere à configuração do avião com empenagem em H e tailboom duplo
+Versão 2024: Avião de cauda dupla e empenagem em H com fuselagem dedicada, porém de placas utilizando perfil aerodinâmico
