@@ -13,7 +13,7 @@ Aqui estarão as instruções recomendadas para rodar o programa de otimização
 
     3.1. Para configurar no ubuntu, primeiro instalar o anaconda e fazer o mesmo + > conda install petsc4py
 
-4. Baixar o executável do avl na versão 3.36 e copiar para dentro dessa pasta do avlwrapper (se não achar o executável tente especificar mais o caminho do diretório no arquivo config)
+4. Baixar o executável do avl na versão 3.52 e copiar para dentro dessa pasta do avlwrapper (se não achar o executável tente especificar mais o caminho do diretório no arquivo config)
 
 ############################### DESCRIÇÃO ###############################
 Este repositório contém o projeto de um programa de Otimização Multidisciplinar desenvolvido para a equipe Minerva Aerodesign da UFRJ para o projeto de aeronaves destinadas à competição SAE Aerodesign.
