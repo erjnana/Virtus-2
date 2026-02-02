@@ -52,15 +52,15 @@ INDIVIDUAL_INPUTS = [
 # =========================
 
 DEFAULT_VALUES = {
-    'w_bt': 2.7,        #envergadura
-    'w_baf': 0.5,       #região de transição
+    'w_bt': 3.5,        #envergadura
+    'w_baf': 0.8,       #região de transição
     'w_cr': 0.4,        #corda da raiz
-    'w_ci': 0.90,       #corda da transição
-    'w_ct': 0.87,       #corda da ponta
+    'w_ci': 0.70,       #corda da transição
+    'w_ct': 0.75,       #corda da ponta
     'w_z': 0.20,        #altura da asa
     'w_inc': 0.0,       #incidência da asa
     'w_wo': 0.0,        #washout da asa
-    'w_d': 1.4,         #diedro da asa
+    'w_d': 1.0,         #diedro da asa
 
     'eh_b': 0.9,        #envergadura
     'eh_cr': 0.25,      #corda da raiz
@@ -70,7 +70,7 @@ DEFAULT_VALUES = {
     'ev_b': 0.40,       #envergadura
     'ev_ct': 0.8,       #corda da ponta
 
-    'eh_x': 1.2,        #distância do eh
+    'eh_x': 0.8,        #distância do eh
     'eh_z': 0.4,        #altura do eh
 
     'motor_x': -0.2,    #distância do motor
@@ -81,26 +81,26 @@ DEFAULT_VALUES = {
 # =========================
 
 DESIGN_VARIABLES = {
-    'w_bt':     {'lower': 0.1,  'upper': 4.0},
-    'w_baf':    {'lower': 0.01, 'upper': 0.99},
-    'w_cr':     {'lower': 0.01, 'upper': 1.00},
-    'w_ci':     {'lower': 0.01, 'upper': 0.99},
-    'w_ct':     {'lower': 0.01, 'upper': 0.99},
-    'w_z':      {'lower': 0.01, 'upper': 1.0},
-    'w_inc':    {'lower': -10,  'upper': 15},
-    'w_wo':     {'lower': -10,  'upper': 15},
-    'w_d':      {'lower': 0.0,  'upper': 10.0},
+    'w_bt':     {'lower': 3.0,  'upper': 4.0},
+    'w_baf':    {'lower': 0.7, 'upper': 0.9},
+    'w_cr':     {'lower': 0.25, 'upper': 0.70},
+    'w_ci':     {'lower': 0.60, 'upper': 0.85},
+    'w_ct':     {'lower': 0.5, 'upper': 0.8},
+    'w_z':      {'lower': 0.01, 'upper': 0.5},
+    'w_inc':    {'lower': -5,  'upper': 8},
+    'w_wo':     {'lower': -5,  'upper': 5},
+    'w_d':      {'lower': -2,  'upper': 3},
 
-    'eh_b':     {'lower': 0.1,  'upper': 4.0},
-    'eh_cr':    {'lower': 0.01, 'upper': 1.0},
-    'eh_ct':    {'lower': 0.01, 'upper': 0.99},
-    'eh_inc':   {'lower': -10,  'upper': 15},
+    'eh_b':     {'lower': 0.8,  'upper': 1.3},
+    'eh_cr':    {'lower': 0.15, 'upper': 0.40},
+    'eh_ct':    {'lower': 0.7, 'upper': 0.95},
+    'eh_inc':   {'lower': -3,  'upper': 3},
 
-    'eh_x':     {'lower': 0.01, 'upper': 5.0},
-    'eh_z':     {'lower': 0.01, 'upper': 3.0},
+    'eh_x':     {'lower': 0.01, 'upper': 1.0},
+    'eh_z':     {'lower': 0.01, 'upper': 1.0},
 
-    'ev_b':     {'lower': 0.01, 'upper': 0.60},
-    'ev_ct':    {'lower': 0.01, 'upper': 0.99},
+    'ev_b':     {'lower': 0.3, 'upper': 0.60},
+    'ev_ct':    {'lower': 0.7, 'upper': 0.95},
 
     'motor_x':  {'lower': -0.4, 'upper': -0.15},
 }

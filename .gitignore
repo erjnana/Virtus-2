@@ -6,7 +6,8 @@ references/
 *.db
 driver_scaling_report.html
 out.json
-log*
+./log*
+./optimizer_out
 log_*
 out_trim_test.json
 toDo.txt

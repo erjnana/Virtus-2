@@ -42,6 +42,7 @@ class Individual(om.ExplicitComponent):
         self.add_input('eh_inc', val=-1.19)
         self.add_input('eh_x', val=1.051)
         self.add_input('eh_z', val=0.4)
+        
 
         # ======= EMPENAGEM VERTICAL =======
         self.add_input('ev_b', val=0.32)
@@ -52,6 +53,7 @@ class Individual(om.ExplicitComponent):
 
         # ======= OUTPUTS =======
         self.add_output('score', val=0.0)
+        self.add_output('eh_z_const', val= 0.06)
 
         # Métricas aerodinâmicas / geométricas
         self.add_output('vht', val=0.0)
@@ -103,9 +105,6 @@ class Individual(om.ExplicitComponent):
 
         motor_x = float(inputs['motor_x'])
 
-        ALPHA_STALL_MIN_DEG = prototype.compute_stall_angle() 
-        outputs['stall_constraint'] = ALPHA_STALL_MIN_DEG - simulator.a_trim
-
         # ======= CONSTRUÇÃO DO AVIÃO =======
         prototype = Prototype(
             w_bt, w_baf, w_cr, w_ci, w_ct,
@@ -133,9 +132,10 @@ class Individual(om.ExplicitComponent):
         simulator = Simulator(prototype, prototype_ge)
 
         # Score global do indivíduo
-        score = simulator.scorer()
+        score = simulator.scorer()[1]
 
         # ======= OUTPUTS =======
+        outputs['stall_constraint'] = ALPHA_STALL_MIN_DEG - simulator.a_trim
         outputs['score'] = score
 
         outputs['vht'] = prototype.vht

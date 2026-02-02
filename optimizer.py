@@ -5,6 +5,7 @@ from simulator import *
 from individual import *
 from performance import *
 import os
+import sys
 from datetime import datetime
 
 from variables import (
@@ -98,6 +99,10 @@ prob.driver.recording_options['includes'] = ['*']
 prob.driver.recording_options['record_objectives'] = True
 prob.driver.recording_options['record_constraints'] = True
 prob.driver.recording_options['record_desvars'] = True
+
+# Arquivo de log em texto
+log_filename_txt = f"{PROJECT_NAME}_{start_time}.txt"
+log_path_txt = os.path.join(log_dir, log_filename_txt)
 
 # =========================
 # VARIÁVEIS DE DESIGN
@@ -206,5 +211,9 @@ prob.model.add_constraint(
 # Prepara o modelo (checagem de conexões)
 prob.setup()
 
-# Roda o MDO
-prob.run_driver()
+# Roda o MDO com log em arquivo txt
+original_stdout = sys.stdout
+with open(log_path_txt, 'w', encoding='utf-8') as f:
+    sys.stdout = f
+    prob.run_driver()
+sys.stdout = original_stdout

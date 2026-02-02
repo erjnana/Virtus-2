@@ -167,7 +167,7 @@ class Prototype:
         self.eh_ct= eh_ct           # Corda da ponta do EH
         self.eh_inc= eh_inc         # Ângulo de incidência do EH
         self.eh_x= eh_x             # Distância horizontal do bordo de atque do EH, em relação ao bordo de ataque da asa
-        self.eh_z= eh_z             # Distância vertical do bordo de atque do EH, em relação ao sol
+        self.eh_z= eh_z             # Distância vertical do bordo de atque do EH, em relação ao solo
 
         # ====================================================
         # EMPENAGEM VERTICAL
