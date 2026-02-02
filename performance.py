@@ -2,6 +2,8 @@ from scipy import *
 from scipy.integrate import quad
 from scipy.optimize import root_scalar
 from math import *
+import matplotlib.pyplot as plt
+import numpy as np
 
 '''
 Módulo que inclui todos os cálculos de desempenho necessários à otimização do modelo
@@ -25,9 +27,9 @@ def tracd(p, t, v, pot):
 
     #tracd= ((28.709955+0.07366009766*v-0.03187744135*v**2-0.0013809470336*v**3+7.82035332027e-5*v**4-1.160949504525e-6*v**5)*(rho(p,t)/rho(p=1013.25, t=15)))*(pot/712.15)
 
-    #trac600= (45.384+0.6374625901805*v-0.39434159385213*v**2+0.028296433071339*v**3-0.00068805475237905*v**4)*(rho(p,t)/rho(p=1013.25, t=15))
+    trac600= (45.384+0.6374625901805*v-0.39434159385213*v**2+0.028296433071339*v**3-0.00068805475237905*v**4)*(rho(p,t)/rho(p=1013.25, t=15))
     
-    #trac650= (40.691396530109+0.6374625901805*v-0.39434159385213*v**2+0.028296433071339*v**3-0.00068805475237905*v**4)*(rho(p,t)/rho(p=1013.25, t=15))
+    trac650= (40.691396530109+0.6374625901805*v-0.39434159385213*v**2+0.028296433071339*v**3-0.00068805475237905*v**4)*(rho(p,t)/rho(p=1013.25, t=15))
 
     #trac700= (42.305389981987+0.026804040121956*v-0.20140472951687*v**2+0.013246483129662*v**3-0.00034284828105358*v**4)*(rho(p,t)/rho(p=1013.25, t=15))
 
@@ -44,37 +46,38 @@ def tracd(p, t, v, pot):
     
     return tracd
 
-def tracr(cld ,cdd , m):
+def tracr(cld ,cdd , m):        
+    #Calcula tração requerida
 
     tracr= m*9.81*(cdd/cld)
     return tracr
 
 def q(p, t, v):
-
+    #Calcula pressão dinâmica
     dens= rho(p,t)
     q= (dens*v**2)/2
     return q
 
 def lift(p, t, v, s, cl):
-
+    #Calcula sustentação
     qp= q(p, t, v)
     lift= qp*s*cl
     return lift
 
 def drag(p, t, v, s, cd):
-
+    #Calcula arrasto
     qp= q(p, t, v)
     drag= qp*s*cd
     return drag
 
 def v_estol(p, t, m, s, clmax, g=9.81):
-
+    #Calcula velocidade de estol
     dens= rho(p,t)
     v_estol= sqrt(abs((2*m*g)/(dens*s*clmax)))
     return v_estol 
 
 def fric(p, t, m, s, clc, clmax, v, g= 9.81, mu= 0.03):
-
+    #Calcula força de atrito no solo
     if v <= 1.2*v_estol(p, t, m, s, clmax, g=9.81):
         lift_c= lift(p, t, v, s, clc)
         fric= mu*(m*g-lift_c)
@@ -85,7 +88,7 @@ def fric(p, t, m, s, clc, clmax, v, g= 9.81, mu= 0.03):
     return fric
 
 def acel_dec(p, t, v, m, s, clc, clmax, cdc, pot, g= 9.81, mu= 0.03):
-    
+    #Calcula aceleração na decolagem
     tracdisp= tracd(p,t,v,pot)
     atrito= fric(p, t, m, s, clc, clmax, v, g= 9.81, mu= 0.03)
     dragc= drag(p, t, v, s, cdc)
@@ -95,11 +98,12 @@ def acel_dec(p, t, v, m, s, clc, clmax, cdc, pot, g= 9.81, mu= 0.03):
     return acel_dec
 
 def f_d_sol(v, p, t, m, s, clc, clmax, cdc, pot, g= 9.81, mu= 0.03):
+    #Calcula a função para integração da distância de solo
     f= v/acel_dec(p, t, v, m, s, clc, clmax, cdc, pot, g, mu)
     return f
 
 def d_sol(p, t, v, m, s, clc, clmax, cdc, pot, g= 9.81, mu= 0.03):
-
+    #Calcula distância de solo
     v_est= v_estol(p, t, m, s, clmax, g)
     v_decol= 1.2*v_est
 
@@ -108,21 +112,21 @@ def d_sol(p, t, v, m, s, clc, clmax, cdc, pot, g= 9.81, mu= 0.03):
     return d_sol
 
 def d_rot(p, t, m, s, clmax, g= 9.81):
-
+    #Calcula distância de rotação
     v_est= v_estol(p, t, m, s, clmax, g)
     d_rot= 1.2*v_est/3
 
     return d_rot
 
 def r_trans(p, t, m, s, clmax, g= 9.81, n= 1.2):
-
+    #Calcula raio de transição
     v_est= v_estol(p, t, m, s, clmax, g)
     r_trans= (1.15*v_est)**2/(g*(n-1))
 
     return r_trans
 
 def g_cl(p, t, m, s, clmax, cdt, pot, g=9.81):
-
+    #Calcula ângulo onde a transição termina 
     v_est= v_estol(p, t, m, s, clmax, g)
     tracdisp= tracd(p, t, v_est,pot)
     drag_t= drag(p, t, v_est, s, cdt)
@@ -132,7 +136,7 @@ def g_cl(p, t, m, s, clmax, cdt, pot, g=9.81):
     return g_cl
 
 def h_trans(p, t, m, s, clmax, cdt, pot, g= 9.81, n= 1.2):
-
+    #Calcula altura de transição
     r_t= r_trans(p, t, m, s, clmax, g, n)
     g_cl_rad= g_cl(p, t, m, s, clmax, cdt, pot, g)
 
@@ -141,7 +145,7 @@ def h_trans(p, t, m, s, clmax, cdt, pot, g= 9.81, n= 1.2):
     return ht
 
 def f_g_tr(gamma, p, t, m, s, clmax, g= 9.81, n= 1.2):
-
+    #Cálculo da função para encontrar o ângulo de transição
     r_t= r_trans(p, t, m, s, clmax, g, n)
 
     f= h_decol- (r_t*(1-cos(gamma)))
@@ -149,18 +153,19 @@ def f_g_tr(gamma, p, t, m, s, clmax, g= 9.81, n= 1.2):
     return f
 
 def g_tr(gamma, p, t, m, s, clmax, g= 9.81, n= 1.2):
-
+    #Calcula ângulo de transição
     g_tr= root_scalar(f_g_tr, args= (p, t, m, s, clmax, g, n), method='bisect', bracket=[0,pi/4])
     
     if g_tr.flag == 'converged':
-        return g_tr.root #em radianos
-    
+        result = g_tr.root #em radianos
     else:
         print('g_tr não convergiu, continuando assim mesmo')
-        return g_tr.root
+        result = g_tr.root
+
+    return result
     
 def d_trans(p, t, m, s, clmax, cdt, pot, g= 9.81, n= 1.2, gamma=0):
-
+    #Calcula distância de transição
     h_t= h_trans(p, t, m, s, clmax, cdt, pot, g, n)
     r_t= r_trans(p, t, m, s, clmax, g, n)
 
@@ -177,7 +182,7 @@ def d_trans(p, t, m, s, clmax, cdt, pot, g= 9.81, n= 1.2, gamma=0):
     return d_t
 
 def d_sub(p, t, m, s, clmax, cdt, pot, g= 9.81, n= 1.2 ):
-
+    #Calcula distância de subida
     h_t= h_trans(p, t, m, s, clmax, cdt, pot, g, n)
     gamma_cl= g_cl(p, t, m, s, clmax, cdt, pot, g)
 
@@ -191,7 +196,7 @@ def d_sub(p, t, m, s, clmax, cdt, pot, g= 9.81, n= 1.2 ):
     return d_sub
 
 def d_decol(p, t, v, m, s, clc, clmax, cdc, cdt, pot, g= 9.81, mu= 0.03, n= 1.2, gamma= 0):
-
+    #Calcula distância total de decolagem
     dist_solo= d_sol(p, t, v, m, s, clc, clmax, cdc, pot, g, mu)
 
     dist_rot= d_rot(p, t, m, s, clmax, g)
@@ -205,16 +210,31 @@ def d_decol(p, t, v, m, s, clc, clmax, cdc, cdt, pot, g= 9.81, mu= 0.03, n= 1.2,
     return dist_decol
 
 def f_mtow(m, p, t, v, s, clc, clmax, cdc, cdt, pot, g= 9.81, mu= 0.03, n= 1.2, gamma= 0):
-
+    #Cálculo da função para encontrar o MTOW
     f= c_pista - d_decol(p, t, v, m, s, clc, clmax, cdc, cdt, pot, g, mu, n, gamma)
 
     return f
 
 def mtow(p, t, v, m, s, clc, clmax, cdc, cdt, pot, g= 9.81, mu= 0.03, n= 1.2, gamma= 0):
+    #Calcula MTOW
+    #Usa método de bisecção para encontrar raiz da função f_mtow
+    f_low = f_mtow(5, p, t, v, s, clc, clmax, cdc, cdt, pot, g, mu, n, gamma)
+    f_high = f_mtow(20, p, t, v, s, clc, clmax, cdc, cdt, pot, g, mu, n, gamma)
 
-    mtow= root_scalar(f_mtow, args= (p, t, v, s, clc, clmax, cdc, cdt, pot, g, mu, n, gamma), method='bisect', bracket=[5,20])
+    #if f_low * f_high < 0:
+    mtow = root_scalar(f_mtow, args= (p, t, v, s, clc, clmax, cdc, cdt, pot, g, mu, n, gamma), method='bisect', bracket=[5,30])
+    result = mtow.root
+    # elif f_low > 0 and f_high > 0:
+    #     # Can take off with more mass, return max
+    #     result = 20
+    # elif f_low < 0 and f_high < 0:
+    #     # Can't take off even with min mass, return 0
+    #     result = 0
+    # else:
+    #     # Edge case, return midpoint or something
+    #     result = 12.5
 
-    return mtow.root
+    return result
 
 
 #def mtow():

@@ -1,7 +1,6 @@
 from pathlib import Path
 import yaml
 
-
 def load_airfoil(name, base_path="airfoils"):
     """
     Carrega os dados de um aerofólio a partir do banco de aerofólios.
@@ -75,7 +74,16 @@ def load_airfoil(name, base_path="airfoils"):
             )
 
     # ============================================================
-    # 4. Retorno organizado dos dados
+    # 4. Localização do arquivo de geometria
+    # ============================================================
+    dat_file = af_dir / "geometry.dat"
+    if not dat_file.exists():
+        raise FileNotFoundError(
+            f"Arquivo geometry.dat não encontrado para o aerofólio '{name}'"
+        )
+
+    # ============================================================
+    # 5. Retorno organizado dos dados
     # ============================================================
     # Retornamos apenas DADOS.
     # Nada de objetos do AVL aqui — isso é responsabilidade do Prototype.

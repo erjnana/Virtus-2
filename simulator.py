@@ -98,11 +98,11 @@ class Simulator():
             return a_results
         except Exception as e:
             stall, b_stall = self.check_stall(a_results)
-            print(f'Estol em {b_stall*100:.1f}% da envergadura')
+            print(f'    ⚠️Estol em {b_stall*100:.1f}% da envergadura')
             raise e
 
     def run_ge(self):
-        print('Calculando coeficientes em efeito solo')
+        print('⌛Calculando coeficientes em efeito solo')
         a_case = Case(
             name='a',
             alpha=0,
@@ -125,7 +125,7 @@ class Simulator():
             except:
                 self.a_stall = a - 1
                 self.clmax = self.cl[a - 1]
-                print(f'Ângulo de estol entre {a-1} e {a} graus')
+                print(f'    ⚠️ Ângulo de estol entre {a-1} e {a} graus')
                 break
         for a in np.arange(12, 31, 1):
             try:
@@ -133,7 +133,7 @@ class Simulator():
             except:
                 self.a_stall = a - 1
                 self.clmax = self.cl[a - 1]
-                print(f'Ângulo de estol entre {a-1} e {a} graus')
+                print(f'    ⚠️ Ângulo de estol entre {a-1} e {a} graus')
                 break
         self.prototype.ALPHA_STALL_MIN_DEGREE = self.a_stall
         self.stall_constraint = self.prototype.ALPHA_STALL_MIN_DEGREE
@@ -157,30 +157,30 @@ class Simulator():
     def scorer(self):
         try:
             self.run_a(0)
-            print('CASO ALFA 0 CONCLUIDO')
+            print('✅CASO ALFA 0 CONCLUIDO')
         except:
-            print('FALHA NA SIMULAÇÃO DE ALFA 0')
+            print('❌FALHA NA SIMULAÇÃO DE ALFA 0')
             self.score = 0
 
         try:
             self.run_ge()
-            print('CASO EFEITO SOLO CONCLUIDO')
+            print('✅CASO EFEITO SOLO CONCLUIDO')
         except:
-            print('FALHA NA SIMULAÇÃO EM EFEITO SOLO')
+            print('❌FALHA NA SIMULAÇÃO EM EFEITO SOLO')
             self.score = 0
 
         try:
             self.run_stall()
-            print('CASO ESTOL CONCLUIDO')
+            print('✅CASO ESTOL CONCLUIDO')
         except:
-            print('FALHA NA SIMULAÇÃO ATÉ O ESTOL')
+            print('❌FALHA NA SIMULAÇÃO ATÉ O ESTOL')
             self.score = 0
 
         try:
             self.run_trim()
-            print('CASO TRIMADO CONCLUIDO')
+            print('✅CASO TRIMADO CONCLUIDO')
         except:
-            print('FALHA NA SIMULAÇÃO DE TRIMAGEM')
+            print('❌FALHA NA SIMULAÇÃO DE TRIMAGEM')
             self.score = 0
             self.a_trim = 0
 
@@ -194,21 +194,19 @@ class Simulator():
             self.prototype.m = self.mtow
             self.cp = self.mtow - self.prototype.pv
             self.score = self.cp
-        except:
+        except Exception as e:
             print('FALHA NA SIMULAÇÃO DE MTOW')
+            print(f"    ⚠️Erro: {e}")
             self.score = 0
             self.cp = 0
 
         # PONTUAÇÃO DA COMPETIÇÃO
         try:
-            comp_score_dict = compute_competition_score(
-                simulator=self,
-                N_horizontal=1
-            )
+            comp_score_dict = compute_competition_score(self.prototype.pv, self.cp)
             self.competition_score = comp_score_dict["PVOO"]
-            print(f"🏆 Pontuação de voo final (PVOO): {self.competition_score:.3f}")
+            print(f"\n🏆 Pontuação de voo final (PVOO): {self.competition_score:.3f}")
         except Exception as e:
-            print("⚠️ Erro ao calcular a pontuação da competição:", e)
+            print("\n⚠️ Erro ao calcular a pontuação da competição:", e)
             self.competition_score = 0
 
         # Penalidades
@@ -243,14 +241,15 @@ class Simulator():
         print('CL em corrida=', self.cl_ge.get(0, 'N/A'))
         print('CD em corrida=', self.cd_ge.get(0, 'N/A'))
 
-        print('Envergadura=', round(self.prototype.w_bt, 3), 'm')
+        print('\nEnvergadura=', round(self.prototype.w_bt, 3), 'm')
         print('Transição=', round(self.prototype.w_baf / self.prototype.w_bt, 3) * 100, '% da envergadura')
+        print('Altura do EH com relação à asa=', round(self.prototype.eh_z_const, 3), 'm')
         print('Área alar=', round(self.prototype.s_ref, 3), 'm^2')
         print('AR=', round(self.prototype.ar, 2))
         print('AR do EH=', round(self.prototype.eh_ar, 2))
         print('M.A.C.=', round(self.prototype.mac, 3), 'm')
 
-        print('--------------Controle e Estabilidade-----------------')
+        print('\n--------------Controle e Estabilidade-----------------')
         print('VHT=', round(self.prototype.vht, 4))
         print('VVT=', round(self.prototype.vvt, 4))
         print('X_CG=', round(self.prototype.x_cg_p, 3), '% da corda da asa')
@@ -259,12 +258,13 @@ class Simulator():
         print('Ângulo de trimagem=', round(self.a_trim, 2), 'graus')
         print('Margem Estática=', round(self.me, 3))
 
-        print('--------------Restrições-----------------')
-        print('Altura do EH com relação à asa=', round(self.prototype.eh_z_const, 3), 'm')
+        # print('--------------Perfis e Estol-----------------')
+        # self.prototype.print_geometry_info()
 
-        print('--------------Estruturas-----------------')
-        print('Peso Vazio=', round(self.prototype.pv, 3), 'kg')
-
-        print('--------------Perfis e Estol-----------------')
-        self.prototype.print_geometry_info()
+if __name__ == '__main__':
+    banana = Prototype( w_bt= 3.2321286257332065, w_baf= 0.9, w_cr= 0.45, w_ci= 0.8547042296684797, w_ct= 0.8, w_z= 0.18, w_inc= -0.3960870755918585, w_wo= 0.0, w_d= 2.1132179687299235, eh_b= 0.6197954432211882, eh_cr= 0.24309488336263088, eh_ct= 0.8, eh_inc= -2.0, ev_b= 0.4, ev_ct= 0.7900185499329802, eh_x= 1.3699514929079597, eh_z= 0.3, motor_x= -0.4,)
+    banana_ge = Prototype( w_bt= 3.2321286257332065, w_baf= 0.9, w_cr= 0.45, w_ci= 0.8547042296684797, w_ct= 0.8, w_z= 0.18, w_inc= -0.3960870755918585, w_wo= 0.0, w_d= 2.1132179687299235, eh_b= 0.6197954432211882, eh_cr= 0.24309488336263088, eh_ct= 0.8, eh_inc= -2.0, ev_b= 0.4, ev_ct= 0.7900185499329802, eh_x= 1.3699514929079597, eh_z= 0.3, motor_x= -0.4, ge=True)
+    banana2= Simulator(banana,banana_ge)
+    banana2.scorer()
+    banana2.print_coeffs()
 
