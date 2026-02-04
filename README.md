@@ -53,5 +53,6 @@ Dessa forma todo o registro da evolução será salvo num arquivo chamado log_op
 Olá! Tentei documentar o suficiente para que com alguma pesquisa qualquer um com entendimento em python e aerodesign pudesse conseguir entender os códigos, mas não sou nenhum programador e esse programa foi um pouco fruto de um experimento, em colaboração claro com alguns membros de aerodinâmica, desempenho e controle e estabilidade. A equipe já teve um MDO antes cujo domínio sobre se perdeu ao longo dos anos (depois de um tempo ninguém entendia mais como funcionava), então essa foi uma preocupação. Qualquer coisa só me contatar, devem haver as infos no GitHub, mas:
 
 Autor: Lucas Alves da Rosa (lucas.rosa@poli.ufrj.br)
+Coautor: Ana Luiza Silva Duarte (als.duarte.20232@poli.ufrj.br
 
 Sinta-se livre para mexer nesses códigos e incluir seu nome aqui ou copiar o que quiser para desenvolver um programa novo!
