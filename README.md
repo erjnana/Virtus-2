@@ -1,4 +1,4 @@
-############################### INSTRUÇÕES DE INSTALAÇÃO ###############################
+a############################### INSTRUÇÕES DE INSTALAÇÃO ###############################
 Aqui estarão as instruções recomendadas para rodar o programa de otimização. Pode ser um pouco complicado e diferente para cada máquina baseado no que já havia instalado na máquina anteriormente. Talvez falte algo aqui que requeira um pouco de investigação, se descobrir coloque aqui.
 
 1. Instalar o Anaconda, para gerenciar o ambiente virtual e instalar os pacotes
