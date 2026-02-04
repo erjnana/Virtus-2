@@ -8,8 +8,7 @@ Aqui estão todos os dados que são necessários serem ajustados antes de rodar 
 # IDENTIDADE DO PROJETO
 # =========================
 
-# Nome do projeto usado em logs, resultados e relatórios
-PROJECT_NAME = "banana"
+PROJECT_NAME = "banana"     # Nome do projeto usado em logs, resultados e relatórios
 
 # =========================
 # PONTUAÇÃO ESTIMADA
@@ -28,22 +27,42 @@ VIDEOVOO = 30.0             # Nota do vídeo de voo
 pot = 600.0  # Potência máxima do motor em W
 
 # ============================================================
+# PERFIS DO AVIÃO
+# ============================================================
+
+root_af='random'            # Perfil da raiz da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+tip_af='random'             # Perfil da ponta da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+eh_af='NACA0012'            # Perfil do EH (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+ev_af ='NACA0012'           # Perfil do EV (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+
+# ============================================================
 # RESTRIÇÕES AERODINÂMICAS GLOBAIS
 # ============================================================
 
-# Ângulo mínimo de estol do AVIÃO COMPLETO [graus]
-ALPHA_STALL_MIN_DEG = 13.0
+ALPHA_STALL_MIN_DEG = 13.0      # Ângulo mínimo de estol do AVIÃO COMPLETO [graus]
 
 # =========================
 # INPUTS DO INDIVÍDUO
 # =========================
 
 INDIVIDUAL_INPUTS = [
-    'w_bt', 'w_baf', 'w_cr', 'w_ci', 'w_ct',
-    'w_z', 'w_inc', 'w_wo', 'w_d',
-    'eh_b', 'eh_cr', 'eh_ct', 'eh_inc',
-    'ev_b', 'ev_ct',
-    'eh_x', 'eh_z',
+    'w_bt',
+    'w_baf', 
+    'w_cr', 
+    'w_ci', 
+    'w_ct',
+    'w_z', 
+    'w_inc', 
+    'w_wo', 
+    'w_d',
+    'eh_b', 
+    'eh_cr', 
+    'eh_ct', 
+    'eh_inc',
+    'ev_b', 
+    'ev_ct',
+    'eh_x', 
+    'eh_z',
     'motor_x'
 ]
 

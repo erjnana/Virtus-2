@@ -2,8 +2,8 @@ from avlwrapper import *
 from mass import *
 from support import *
 from math import *
-from airfoil_loader import load_airfoil
-from variables import pot
+from airfoil_loader import *
+from variables import *
 
 def h_const(ev_z,ev_b): #mantido
     '''
@@ -127,11 +127,6 @@ class Prototype:
         # ---------------- MOTOR ----------------
         motor_x, motor_z=0.30,
 
-        # ---------------- PERFIS ----------------
-        root_af='eppler421',
-        tip_af='eppler421',
-        eh_af='NACA0012',
-
         # ---------------- OPÇÕES ----------------
         ge=False
     ):
@@ -143,6 +138,11 @@ class Prototype:
         w_ci= w_ci*w_cr             # O input de w_ci é porcentagem da corda da raíz (w_cr), convertendo para [m]
         w_ct= w_ct*w_ci             # O input de w_ct é porcentagem da corda intermediária (w_ci), convertendo para [m]
         w_baf= w_baf*w_bt           # O input de w_baf é porcentagem do ponto de transição (w_bt), convertendo para [m
+
+        # ====================================================
+        # PERFIS
+        # ====================================================
+
 
         # ====================================================
         # ARMAZENAMENTO DA ASA
@@ -243,9 +243,11 @@ class Prototype:
         # ====================================================
         # PERFIS – CARREGADOS DO BANCO
         # ====================================================
-        self.root_af = load_airfoil(root_af)
-        self.tip_af = load_airfoil(tip_af)
-        self.eh_af = load_airfoil(eh_af)
+
+        self.root_af = select_airfoil(root_af, airfoils_database_asa, label="Raiz da Asa")
+        self.tip_af  = select_airfoil(tip_af, airfoils_database_asa, label="Ponta da Asa")
+        self.eh_af   = select_airfoil(eh_af, airfoils_database_eh, label="EH")
+        self.ev_af   = select_airfoil(ev_af, airfoils_database_ev, label="EV")
 
         # ====================================================
         # CL_MAX DOS PERFIS
@@ -253,6 +255,7 @@ class Prototype:
         self.w_root_clmax = self.root_af['cl_max']
         self.w_tip_clmax = self.tip_af['cl_max']
         self.w_eh_clmax = self.eh_af['cl_max']
+        self.w_ev_clmax = self.ev_af['cl_max']
 
         # ====================================================
         # SEÇÕES – ASA
@@ -376,6 +379,9 @@ class Prototype:
         print(f"Perfil da Raiz: {self.root_af['name']}  |  Alpha CLmax: {self.root_af['alpha_cl_max']}°")
         print(f"Perfil da Ponta: {self.tip_af['name']}  |  Alpha CLmax: {self.tip_af['alpha_cl_max']}°")
         print(f"Perfil do EH: {self.eh_af['name']}  |  Alpha CLmax: {self.eh_af['alpha_cl_max']}°\n")
+        print(f"Perfil do EV: {self.ev_af['name']}  |  Alpha CLmax: {self.ev_af['alpha_cl_max']}°\n")
+
+
 
 # if __name__ == '__main__':
 #     banana = Prototype( w_bt= 3.2321286257332065, w_baf= 0.9, w_cr= 0.45, w_ci= 0.8547042296684797, w_ct= 0.8, w_z= 0.18, w_inc= -0.3960870755918585, w_wo= 0.0, w_d= 2.1132179687299235, eh_b= 0.6197954432211882, eh_cr= 0.24309488336263088, eh_ct= 0.8, eh_inc= -2.0, ev_b= 0.4, ev_ct= 0.7900185499329802, eh_x= 1.3699514929079597, eh_z= 0.3, motor_x= -0.4, ge=False)

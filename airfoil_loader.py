@@ -1,19 +1,29 @@
 from pathlib import Path
 import yaml
+import random
 
-base_path = "airfoils/assymmetric"
-def load_airfoil(name, base_path):
+def load_airfoil(name):
     """
-    Carrega os dados de um aerofólio a partir do banco de aerofólios.
+    Carrega os dados de um aerofólio procurando nas subpastas 
+    symmetric, assymmetric e inverted.
     """
-    af_dir = Path(base_path) / name
+    base_dir = Path("airfoils")
+    subfolders = ["symmetric", "assymmetric", "inverted"]
+    af_dir = None
 
-    if not af_dir.exists():
-        raise FileNotFoundError(f"Aerofólio '{name}' não encontrado em '{base_path}'")
+    # Procura em qual subpasta o aerofólio está
+    for sub in subfolders:
+        potential_path = base_dir / sub / name
+        if potential_path.exists():
+            af_dir = potential_path
+            break
+
+    if not af_dir:
+        raise FileNotFoundError(f"Aerofólio '{name}' não encontrado nas subpastas de '{base_path}'")
 
     info_file = af_dir / "info.yaml"
     if not info_file.exists():
-        raise FileNotFoundError(f"Arquivo info.yaml não encontrado para o aerofólio '{name}'")
+        raise FileNotFoundError(f"Arquivo info.yaml não encontrado em '{af_dir}'")
 
     with open(info_file, "r") as f:
         info = yaml.safe_load(f)
@@ -30,7 +40,7 @@ def load_airfoil(name, base_path):
 
     dat_file = af_dir / "geometry.dat"
     if not dat_file.exists():
-        raise FileNotFoundError(f"Arquivo geometry.dat não encontrado para o aerofólio '{name}'")
+        raise FileNotFoundError(f"Arquivo geometry.dat não encontrado em '{af_dir}'")
 
     return {
         "cl_max": summary["cl_max"],
@@ -39,29 +49,64 @@ def load_airfoil(name, base_path):
     }
 
 # ============================================================
-# LOOP DE CARREGAMENTO
+# LOOP DE CARREGAMENTO ORGANIZADO POR CATEGORIA
 # ============================================================
 
-# Ajustado para a subpasta correta
-airfoils_database = {}
+airfoils_database_asa = {} # Apenas assymmetric
+airfoils_database_eh = {}  # symmetric e inverted
+airfoils_database_ev = {}  # Apenas symmetric
+
+base_path = "airfoils"
 base_dir = Path(base_path)
 
 if base_dir.exists() and base_dir.is_dir():
-    for folder in base_dir.iterdir():
-        if folder.is_dir():
-            try:
-                airfoil_name = folder.name
-                # Passamos o BASE_PATH explicitamente para a função
-                data = load_airfoil(airfoil_name, base_path)
-                
-                # Guardamos no dicionário (usando o nome da pasta como chave)
-                airfoils_database[airfoil_name] = data
-                
-                print(f"Sucesso: {airfoil_name} carregado.")
-                
-            except (FileNotFoundError, KeyError) as e:
-                print(f"Erro ao carregar '{folder.name}': {e}")
-else:
-    print(f"Erro: O diretório '{base_path}' não foi encontrado.")
+    # Mapeamento de pastas para seus respectivos dicionários alvo
+    # Pasta -> Lista de dicionários onde deve ser incluído
+    mapping = {
+        "assymmetric": [airfoils_database_asa],
+        "symmetric": [airfoils_database_eh, airfoils_database_ev],
+        "inverted": [airfoils_database_eh]
+    }
 
-print(airfoils_database)
+    for subfolder_name, targets in mapping.items():
+        subfolder_path = base_dir / subfolder_name
+        
+        if subfolder_path.exists() and subfolder_path.is_dir():
+            for folder in subfolder_path.iterdir():
+                if folder.is_dir():
+                    try:
+                        airfoil_name = folder.name
+                        data = load_airfoil(airfoil_name)
+                        
+                        # Adiciona o perfil nos dicionários correspondentes
+                        for target_dict in targets:
+                            target_dict[airfoil_name] = data
+                        
+                        print(f"Sucesso: {airfoil_name} carregado em sua categoria ({subfolder_name}).")
+                        
+                    except (FileNotFoundError, KeyError) as e:
+                        print(f"⚠️ Erro ao carregar '{folder.name}': {e}")
+else:
+    print(f"⚠️ Erro: O diretório base '{base_path}' não foi encontrado.")
+
+print(airfoils_database_asa)
+print(airfoils_database_eh)
+print(airfoils_database_ev)
+
+def select_airfoil(name_or_random, database, label="Componente"):
+    """
+    Seleciona o perfil e imprime a escolha no terminal.
+    """
+    if not database:
+        raise ValueError(f"O banco de dados para {label} está vazio.")
+
+    if name_or_random.lower() == "random":
+        chosen_name = random.choice(list(database.keys()))
+        print(f"🎲 [RANDOM] {label}: Selecionado o perfil '{chosen_name}'")
+    else:
+        chosen_name = name_or_random
+        if chosen_name not in database:
+            raise KeyError(f"❌ Erro: Perfil '{chosen_name}' não encontrado para {label}.")
+        print(f"✅ [FIXO]   {label}: Usando o perfil '{chosen_name}'")
+
+    return database[chosen_name]
