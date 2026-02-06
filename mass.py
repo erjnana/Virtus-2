@@ -12,7 +12,7 @@ dens_stab= 0.63775               #kg/m2 - Valor médio entre densidade do EH e d
  
 # Dados de massa dos componentes principais em kg
 
-m_batt= 0.62                     # kg
+m_batt= 0.62                     # kg - Bateria + componentes elétricos
 m_motor= 0.500                   # kg- Motor + hélice
 m_tdp= 0.740                     # kg - TDP + Rodas e rolamentos
 m_beq= 0.220                     # kg - Garfo de aço + Rodas e Rolamentos + Mancais e rolamentos do mecanismo

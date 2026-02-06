@@ -89,10 +89,6 @@ if base_dir.exists() and base_dir.is_dir():
 else:
     print(f"⚠️ Erro: O diretório base '{base_path}' não foi encontrado.")
 
-print(airfoils_database_asa)
-print(airfoils_database_eh)
-print(airfoils_database_ev)
-
 def select_airfoil(name_or_random, database, label="Componente"):
     """
     Seleciona o perfil e imprime a escolha no terminal.
@@ -110,3 +106,13 @@ def select_airfoil(name_or_random, database, label="Componente"):
         print(f"✅ [FIXO]   {label}: Usando o perfil '{chosen_name}'")
 
     return database[chosen_name]
+
+LISTA_ASA = sorted(list(airfoils_database_asa.keys()))
+LISTA_EH  = sorted(list(airfoils_database_eh.keys()))
+LISTA_EV  = sorted(list(airfoils_database_ev.keys()))
+
+print(f"📦 Catálogo carregado: {len(LISTA_ASA)} perfis de asa, {len(LISTA_EH)} de EH, {len(LISTA_EV)} de EV.")
+
+# print(airfoils_database_asa)
+# print(airfoils_database_eh)
+# print(airfoils_database_ev)

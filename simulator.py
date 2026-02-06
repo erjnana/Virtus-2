@@ -19,9 +19,8 @@ class Simulator():
     - Cálculo de MTOW, carga paga e pontuação de voo da competição
     """
 
-    def __init__(self, prototype, prototype_ge, p=905.5, t=25, v=10, mach=0.0):
+    def __init__(self, prototype, p=905.5, t=25, v=10, mach=0.0):
         self.prototype = prototype
-        self.prototype_ge = prototype_ge
         self.p = p
         self.t = t
         self.v = v
@@ -89,12 +88,13 @@ class Simulator():
             if not stall:
                 self.deflex[a] = a_results['a']['Totals']['elevator']
                 self.cl[a] = a_results['a']['Totals']['CLtot']
+                print(f"    ✈️ CL Voo Livre (alpha={a}): {self.cl[a]:.4f}")
                 self.cd[a] = a_results['a']['Totals']['CDtot']
                 self.cm[a] = a_results['a']['Totals']['Cmtot']
                 self.cma[a] = a_results['a']['StabilityDerivatives']['Cma']
                 self.cnb[a] = a_results['a']['StabilityDerivatives']['Cnb']
             else:
-                raise RuntimeError(f"Estol detectado em alfa={a}")
+                raise RuntimeError(f"\nEstol detectado em alfa={a}")
             return a_results
         except Exception as e:
             stall, b_stall = self.check_stall(a_results)
@@ -103,6 +103,7 @@ class Simulator():
 
     def run_ge(self):
         print('⌛Calculando coeficientes em efeito solo')
+        ge_geometry = self.prototype.get_geometry(ground_effect=True)
         a_case = Case(
             name='a',
             alpha=0,
@@ -112,9 +113,11 @@ class Simulator():
             X_cg=self.prototype.x_cg,
             Z_cg=self.prototype.z_cg
         )
-        session = Session(geometry=self.prototype_ge.geometry, cases=[a_case])
+        session = Session(geometry=ge_geometry, cases=[a_case])
         a_results = session.get_results()
+        
         self.cl_ge[0] = a_results['a']['Totals']['CLtot']
+        print(f"    🛫 CL Efeito Solo: {self.cl_ge[0]:.4f}")
         self.cd_ge[0] = a_results['a']['Totals']['CDtot']
         return a_results
 
@@ -204,9 +207,9 @@ class Simulator():
         try:
             comp_score_dict = compute_competition_score(self.prototype.pv, self.cp)
             self.competition_score = comp_score_dict["PVOO"]
-            print(f"\n🏆 Pontuação de voo final (PVOO): {self.competition_score:.3f}")
+            print(f"\n🏆 Pontuação de voo final (PVOO): {self.competition_score:.3f}\n")
         except Exception as e:
-            print("\n⚠️ Erro ao calcular a pontuação da competição:", e)
+            print("\n⚠️ Erro ao calcular a pontuação da competição:\n", e)
             self.competition_score = 0
 
         # Penalidades

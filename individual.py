@@ -1,12 +1,9 @@
 import openmdao.api as om
-
-# Importa os módulos principais do MDO
 from prototype import Prototype
 from simulator import Simulator
-
-# Importa variáveis globais do projeto (restrições, configs, etc.)
-from variables import ALPHA_STALL_MIN_DEG
-
+from variables import *
+# IMPORTANTE: importar as listas e bases
+from airfoil_loader import (LISTA_ASA, LISTA_EH, LISTA_EV, airfoils_database_asa, airfoils_database_eh, airfoils_database_ev)
 
 class Individual(om.ExplicitComponent):
     """
@@ -48,6 +45,12 @@ class Individual(om.ExplicitComponent):
         self.add_input('ev_b', val=0.32)
         self.add_input('ev_ct', val=0.83)
 
+        # ======= PERFIS =======
+        self.add_input('idx_asa_root', val=0.0)
+        self.add_input('idx_asa_tip', val=0.0)
+        self.add_input('idx_eh', val=0.0)
+        self.add_input('idx_ev', val=0.0)
+
         # ======= PROPULSÃO =======
         self.add_input('motor_x', val=-0.218)
 
@@ -80,7 +83,7 @@ class Individual(om.ExplicitComponent):
         """
         Executa a simulação de um indivíduo
         """
-
+        global primeira_execucao
         # ======= CONVERSÃO DOS INPUTS =======
         # OpenMDAO trabalha com arrays → converter para float
         w_bt = float(inputs['w_bt'])
@@ -105,6 +108,27 @@ class Individual(om.ExplicitComponent):
 
         motor_x = float(inputs['motor_x'])
 
+        def definir_perfil(instrucao, idx_float, lista, database, label):
+            if instrucao.lower() == "random":
+                # Traduz o índice do otimizador para um nome da lista
+                i = int(round(float(idx_float)))
+                i = max(0, min(i, len(lista) - 1))
+                chosen_name = lista[i]
+                print(f"🎲 [OTIMIZANDO] {label}: Selecionado o perfil '{chosen_name}'")
+            else:
+                chosen_name = instrucao
+                if chosen_name not in database:
+                    raise KeyError(f"❌ Erro: Perfil '{chosen_name}' não encontrado para {label}.")
+                print(f"✅ [FIXO]   {label}: Usando o perfil '{chosen_name}'")
+            
+            return database[chosen_name]
+
+        # Resgatando os perfis com base na regra
+        dados_root = definir_perfil(root_af, inputs['idx_asa_root'], LISTA_ASA, airfoils_database_asa, "Raiz da Asa")
+        dados_tip  = definir_perfil(tip_af,  inputs['idx_asa_tip'],  LISTA_ASA, airfoils_database_asa, "Ponta da Asa")
+        dados_eh   = definir_perfil(eh_af,   inputs['idx_eh'],       LISTA_EH,  airfoils_database_eh,  "EH")
+        dados_ev   = definir_perfil(ev_af,   inputs['idx_ev'],       LISTA_EV,  airfoils_database_ev,  "EV")
+
         # ======= CONSTRUÇÃO DO AVIÃO =======
         prototype = Prototype(
             w_bt, w_baf, w_cr, w_ci, w_ct,
@@ -114,22 +138,14 @@ class Individual(om.ExplicitComponent):
             ev_ct, ev_b,
             motor_x,
             motor_z=0.30,
-            ge=False
-        )
-
-        prototype_ge = Prototype(
-            w_bt, w_baf, w_cr, w_ci, w_ct,
-            w_z, w_inc, w_wo, w_d,
-            eh_b, eh_cr, eh_ct, eh_inc,
-            eh_x, eh_z,
-            ev_ct, ev_b,
-            motor_x,
-            motor_z=0.30,
-            ge=True
+            af_root_data=dados_root,
+            af_tip_data=dados_tip,
+            af_eh_data=dados_eh,
+            af_ev_data=dados_ev
         )
 
         # ======= SIMULAÇÃO =======
-        simulator = Simulator(prototype, prototype_ge)
+        simulator = Simulator(prototype)
 
         # Score global do indivíduo
         score = simulator.scorer()[1]

@@ -8,12 +8,8 @@ import os
 import sys
 from datetime import datetime
 
-from variables import (
-    PROJECT_NAME,           #nome do projeto para salvamento do arquivo
-    INDIVIDUAL_INPUTS,      # nomes das variáveis de entrada do Individual
-    DEFAULT_VALUES,         # valores iniciais (chute inicial do MDO)
-    DESIGN_VARIABLES       # limites inferior e superior de cada variável
-)
+from variables import *
+from airfoil_loader import LISTA_ASA, LISTA_EH
 
 """
 Programa principal do MDO.
@@ -50,6 +46,12 @@ prob.model.add_subsystem(
 # Esses valores são o "primeiro indivíduo" da população
 for var_name, default_value in DEFAULT_VALUES.items():
     prob.model.set_input_defaults(var_name, default_value)
+
+# Define os valores dos perfis (FORA do loop)
+prob.model.set_input_defaults('individual_scorer.idx_asa_root', 0.0)
+prob.model.set_input_defaults('individual_scorer.idx_asa_tip', 0.0)
+prob.model.set_input_defaults('individual_scorer.idx_eh', 0.0)
+prob.model.set_input_defaults('individual_scorer.idx_ev', 0.0)
 
 # =========================
 # DRIVER DE OTIMIZAÇÃO
@@ -108,10 +110,21 @@ log_path_txt = os.path.join(log_dir, log_filename_txt)
 # VARIÁVEIS DE DESIGN
 # =========================
 
+if root_af.lower() == "random":
+    prob.model.add_design_var('individual_scorer.idx_asa_root', lower=0, upper=len(LISTA_ASA)-1)
+
+if tip_af.lower() == "random":
+    prob.model.add_design_var('individual_scorer.idx_asa_tip', lower=0, upper=len(LISTA_ASA)-1)
+
+if eh_af.lower() == "random":
+    prob.model.add_design_var('individual_scorer.idx_eh', lower=0, upper=len(LISTA_EH)-1)
+
+if ev_af.lower() == "random":
+    prob.model.add_design_var('individual_scorer.idx_ev', lower=0, upper=len(LISTA_EV)-1)
+
 # Aqui o MDO fica sabendo:
 # - quais variáveis ele pode mexer
 # - quais os limites físicos de cada uma
-#
 # Os limites vêm TODOS do variables.py
 for var_name, bounds in DESIGN_VARIABLES.items():
     prob.model.add_design_var(
@@ -209,9 +222,11 @@ prob.model.add_constraint(
 # =========================
 
 # Prepara o modelo (checagem de conexões)
+print("\n--- INICIANDO SETUP ---")
 prob.setup()
 
 # Roda o MDO com log em arquivo txt
+print("\n--- SETUP CONCLUÍDO. INICIANDO OTIMIZAÇÃO ---\n")
 original_stdout = sys.stdout
 with open(log_path_txt, 'w', encoding='utf-8') as f:
     sys.stdout = f

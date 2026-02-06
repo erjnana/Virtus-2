@@ -127,6 +127,11 @@ class Prototype:
         # ---------------- MOTOR ----------------
         motor_x, motor_z=0.30,
 
+        # ---------------- PERFIS ----------------
+        af_root_data=None,
+        af_tip_data=None,
+        af_eh_data=None,
+        af_ev_data=None,
         # ---------------- OPÇÕES ----------------
         ge=False
     ):
@@ -138,11 +143,6 @@ class Prototype:
         w_ci= w_ci*w_cr             # O input de w_ci é porcentagem da corda da raíz (w_cr), convertendo para [m]
         w_ct= w_ct*w_ci             # O input de w_ct é porcentagem da corda intermediária (w_ci), convertendo para [m]
         w_baf= w_baf*w_bt           # O input de w_baf é porcentagem do ponto de transição (w_bt), convertendo para [m
-
-        # ====================================================
-        # PERFIS
-        # ====================================================
-
 
         # ====================================================
         # ARMAZENAMENTO DA ASA
@@ -244,18 +244,18 @@ class Prototype:
         # PERFIS – CARREGADOS DO BANCO
         # ====================================================
 
-        self.root_af = select_airfoil(root_af, airfoils_database_asa, label="Raiz da Asa")
-        self.tip_af  = select_airfoil(tip_af, airfoils_database_asa, label="Ponta da Asa")
-        self.eh_af   = select_airfoil(eh_af, airfoils_database_eh, label="EH")
-        self.ev_af   = select_airfoil(ev_af, airfoils_database_ev, label="EV")
+        self.root_af = af_root_data
+        self.tip_af  = af_tip_data
+        self.eh_af   = af_eh_data
+        self.ev_af   = af_ev_data
 
         # ====================================================
         # CL_MAX DOS PERFIS
         # ====================================================
         self.w_root_clmax = self.root_af['cl_max']
-        self.w_tip_clmax = self.tip_af['cl_max']
-        self.w_eh_clmax = self.eh_af['cl_max']
-        self.w_ev_clmax = self.ev_af['cl_max']
+        self.w_tip_clmax  = self.tip_af['cl_max']
+        self.w_eh_clmax   = self.eh_af['cl_max']
+        self.w_ev_clmax   = self.ev_af['cl_max']
 
         # ====================================================
         # SEÇÕES – ASA
@@ -362,7 +362,25 @@ class Prototype:
                                     #y_symmetry=Symmetry.symmetric
                                     )
 
-        
+    # ====================================================
+    # RETORNAR A GEOMETRIA CONFIGURADA
+    # ====================================================
+
+    def get_geometry(self, ground_effect=False):
+        """Retorna a geometria configurada com ou sem efeito solo."""
+        if ground_effect:
+            return Geometry(
+                name="Prototype_GE",
+                reference_area=self.s_ref,
+                reference_chord=self.mac,
+                reference_span=self.ref_span,
+                reference_point=Point(self.x_cg, 0, self.z_cg),
+                surfaces=[self.wing_surface, self.eh_surface, self.ev_surface],
+                z_symmetry=Symmetry.symmetric,
+                z_symmetry_plane=0.00
+            )
+        else:
+            return self.geometry
 
     #Método utilizado para mostrar em interface gráfica a geometria do protótipo
     def show_geometry(self):
