@@ -45,26 +45,23 @@ class Simulator():
     # MÉTODOS DE CHECAGEM DE ESTOL
     ###########################################################################
     def check_stall(self, results):
-        stall = False
-        b_stall = 0
+        limits = {
+            'Wing': self.prototype.w_root_clmax,
+            'Eh': self.prototype.af_eh_data['cl_max'] if hasattr(self.prototype, 'af_eh_data') else 1.2,
+            'Canard': self.prototype.af_canard_data['cl_max'] if hasattr(self.prototype, 'af_canard_data') else 1.2
+        }
 
-        for panel_n in range(int(len(results['a']['StripForces']['Wing']['Yle']))):
-            y_pos = results['a']['StripForces']['Wing']['Yle'][panel_n]
-            cl = results['a']['StripForces']['Wing']['cl'][panel_n]
+        for surf_name, cl_limit in limits.items():
+            if surf_name in results['a']['StripForces']:
+                cls = results['a']['StripForces'][surf_name]['cl']
+                max_cl_3d = max(cls)
+                if max_cl_3d >= cl_limit:
+                    # Encontra a posição y do estol para o print do run_a
+                    idx = np.argmax(cls)
+                    y_stall = results['a']['StripForces'][surf_name]['Yle'][idx]
+                    return True, y_stall 
 
-            if y_pos <= self.prototype.w_baf / 2:
-                clmax = self.prototype.w_root_clmax
-            else:
-                af_len = (self.prototype.w_bt - self.prototype.w_baf) / 2
-                af_len_perc = (y_pos - self.prototype.w_baf / 2) / af_len
-                clmax = af_len_perc * self.prototype.w_tip_clmax + (1 - af_len_perc) * self.prototype.w_root_clmax
-
-            if cl >= clmax:
-                stall = True
-                b_stall = y_pos / (self.prototype.w_bt / 2)
-                return stall, b_stall
-
-        return stall, b_stall
+        return False, 0.0
 
     ###########################################################################
     # MÉTODOS DE SIMULAÇÃO
@@ -82,9 +79,10 @@ class Simulator():
         )
         session = Session(geometry=self.prototype.geometry, cases=[a_case])
         a_results = session.get_results()
+        self.last_results = a_results
 
         try:
-            stall, _ = self.check_stall(a_results)
+            stall, b_stall = self.check_stall(a_results) # <--- Recebe o b_stall
             if not stall:
                 self.deflex[a] = a_results['a']['Totals']['elevator']
                 self.cl[a] = a_results['a']['Totals']['CLtot']
@@ -150,9 +148,34 @@ class Simulator():
         )
         session = Session(geometry=self.prototype.geometry, cases=[trimmed])
         trim_results = session.get_results()
+        
+        # --- ADICIONE ESTA LINHA ---
+        self.last_results = trim_results 
+        # ---------------------------
+
         self.a_trim = trim_results['trimmed']['Totals']['Alpha']
         self.xnp = trim_results['trimmed']['StabilityDerivatives']['Xnp']
         self.me = me(self.xnp, self.prototype.x_cg, self.prototype.mac)
+
+    def get_max_cl_surface(self, surface_name):
+        """
+        Extrai o Cl máximo de uma superfície específica.
+        """
+        if not hasattr(self, 'last_results'):
+            return 0.0
+            
+        # Tenta encontrar os dados de força no caso 'trimmed' ou no caso 'a'
+        case_name = 'trimmed' if 'trimmed' in self.last_results else 'a'
+        
+        try:
+            forces = self.last_results[case_name]['StripForces']
+            if surface_name in forces:
+                cls = forces[surface_name]['cl']
+                return max(cls) if len(cls) > 0 else 0.0
+        except KeyError:
+            pass
+            
+        return 0.0
 
     ###########################################################################
     # MÉTODO PRINCIPAL DE PONTUAÇÃO
@@ -205,7 +228,7 @@ class Simulator():
 
         # PONTUAÇÃO DA COMPETIÇÃO
         try:
-            comp_score_dict = compute_competition_score(self.prototype.pv, self.cp)
+            comp_score_dict = compute_competition_score(self.prototype.pv, self.cp, self.prototype.w_bt)
             self.competition_score = comp_score_dict["PVOO"]
             print(f"\n🏆 Pontuação de voo final (PVOO): {self.competition_score:.3f}\n")
         except Exception as e:

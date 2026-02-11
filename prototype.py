@@ -24,6 +24,12 @@ def s_ref(w_cr, w_ci, w_baf,w_ct,w_bt): #alterado
     '''
     return (((w_cr+w_ci)*w_baf/2) + ((w_ci+w_ct)/2)*(w_bt-w_baf))
 
+def scn(cn_b, cn_cr, cn_ct):
+    '''
+    Calcula a área de um Canard trapezoidal (cn_b é a envergadura total)
+    '''
+    return (cn_cr + cn_ct) * cn_b / 2
+
 def c_med(s_ref,w_bt): #mantido
     '''
     Função que calcula a corda média de uma asa trapezoidal
@@ -110,6 +116,7 @@ class Prototype:
     - w_* : asa
     - eh_* : estabilizador horizontal
     - ev_* : estabilizador vertical
+    - cn_* : asa canard
     """
 
     def __init__(
@@ -124,14 +131,19 @@ class Prototype:
         # ---------------- EV ----------------
         ev_b, ev_ct,
 
+        # ---------------- CANARD ----------------
+        cn_b=0.0, cn_cr=0.0, cn_ct=0.0, 
+        cn_inc=0.0, cn_x=0.0, cn_d=0.0, cn_z=0.0,
+        
         # ---------------- MOTOR ----------------
-        motor_x, motor_z=0.30,
+        motor_x=-0.218, motor_z=0.30,
 
         # ---------------- PERFIS ----------------
         af_root_data=None,
         af_tip_data=None,
         af_eh_data=None,
         af_ev_data=None,
+        af_canard_data=None,
         # ---------------- OPÇÕES ----------------
         ge=False
     ):
@@ -187,6 +199,20 @@ class Prototype:
         self.ev_z= ev_z             # Distância vertical do bordo de atque dos EV's, em relação ao bordo de ataque da asa
 
         # ====================================================
+        # CANARD (Conversão e Armazenamento)
+        # ====================================================
+        cn_cr_m = cn_cr # Supondo que cn_cr venha em metros ou conforme sua lógica
+        cn_ct_m = cn_ct * cn_cr_m
+        
+        self.cn_b = cn_b
+        self.cn_cr = cn_cr_m
+        self.cn_ct = cn_ct_m
+        self.cn_inc = cn_inc
+        self.cn_x = cn_x
+        self.cn_z = cn_z
+        self.cn_d = cn_d
+
+        # ====================================================
         # MOTOR
         # ====================================================
         self.motor_x= motor_x       # Posição horizontal do motor. Vai ser negativa em uma configuração convencional
@@ -223,14 +249,25 @@ class Prototype:
         self.ar = ar(w_bt, self.s_ref)
         self.eh_ar = ar(eh_b, self.sht)
 
+        self.scn = scn(self.cn_b, self.cn_cr, self.cn_ct)
+
         # ====================================================
         # MASSA E CG
         # ====================================================
         self.eh_z_const= self.eh_z - self.w_z # Restrição geométrica para eh acima da asa
-        self.pv= total_m(self.s_ref, self.sht, self.svt, self.fus_h, self.fus_l, self.boom_l)
-        self.x_cg= cg(self.s_ref, self.w_z, self.w_cr, self.sht, self.eh_x, self.eh_z, self.eh_cr, self.svt, self.ev_x, self.ev_z, self.ev_cr, self.fus_z, self.fus_h, self.fus_l, self.boom_l, self.motor_x, self.motor_z)[0]
-        self.z_cg= cg(self.s_ref, self.w_z, self.w_cr, self.sht, self.eh_x, self.eh_z, self.eh_cr, self.svt, self.ev_x, self.ev_z, self.ev_cr, self.fus_z, self.fus_h, self.fus_l, self.boom_l, self.motor_x, self.motor_z)[1]
-        self.x_cg_p= self.x_cg/self.w_cr    # Posição do CG como fração da corda
+        self.pv = total_m(self.s_ref, self.sht, self.svt, self.scn, self.fus_h, self.fus_l, self.boom_l)
+        cg_coords = cg(
+            self.s_ref, self.w_z, self.w_cr, 
+            self.sht, self.eh_x, self.eh_z, self.eh_cr, 
+            self.svt, self.ev_x, self.ev_z, self.ev_cr, 
+            self.scn, self.cn_x, self.cn_z, self.cn_cr, # Novos argumentos!
+            self.fus_z, self.fus_h, self.fus_l, self.boom_l, 
+            self.motor_x, self.motor_z
+        )
+        
+        self.x_cg = cg_coords[0]
+        self.z_cg = cg_coords[1]
+        self.x_cg_p = self.x_cg / self.w_cr    # Posição do CG como fração da corda
 
         self.lvt= lvt(self.ev_x, self.ev_cr, self.x_cg)
         self.vvt= vvt(self.lvt,self.svt,self.w_bt,self.s_ref)
@@ -248,14 +285,16 @@ class Prototype:
         self.tip_af  = af_tip_data
         self.eh_af   = af_eh_data
         self.ev_af   = af_ev_data
+        self.cn_af   = af_canard_data
 
         # ====================================================
         # CL_MAX DOS PERFIS
         # ====================================================
-        self.w_root_clmax = self.root_af['cl_max']
-        self.w_tip_clmax  = self.tip_af['cl_max']
-        self.w_eh_clmax   = self.eh_af['cl_max']
-        self.w_ev_clmax   = self.ev_af['cl_max']
+        self.w_root_clmax = self.root_af['cl_max'] if self.root_af else 1.2
+        self.w_tip_clmax  = self.tip_af['cl_max'] if self.tip_af else 1.2
+        self.w_eh_clmax   = self.eh_af['cl_max'] if self.eh_af else 0.0
+        self.w_ev_clmax   = self.ev_af['cl_max'] if self.ev_af else 0.0
+        self.cn_clmax     = self.cn_af['cl_max'] if self.cn_af else 0.0
 
         # ====================================================
         # SEÇÕES – ASA
@@ -335,8 +374,84 @@ class Prototype:
                                     #y_duplicate=0.0,
                                     sections=[self.ev_root_section, self.ev_tip_section]
                                     )
+        
+        # ====================================================
+        # SEÇÕES – CANARD
+        # ====================================================
+        if self.cn_b > 0.01:
+            # Ponto da ponta calculado com o diedro
+            z_tip_cn = self.cn_z + z_d(self.cn_b/2, self.cn_d)
+            
+            self.cn_root_section = Section(leading_edge_point=Point(self.cn_x, 0, self.cn_z),
+                                        chord=self.cn_cr,
+                                        airfoil=FileAirfoil(self.cn_af["dat_path"])
+            )
+            
+            self.cn_tip_section = Section(leading_edge_point=Point(self.cn_x, self.cn_b/2, z_tip_cn),
+                                        chord=self.cn_ct,
+                                        airfoil=FileAirfoil(self.cn_af["dat_path"])
+            )
+
+            self.canard_surface = Surface(
+                name="Canard",
+                n_chordwise=8,
+                chord_spacing=Spacing.cosine,
+                n_spanwise=10,
+                span_spacing=Spacing.equal,
+                y_duplicate=0.0,
+                sections=[self.cn_root_section, self.cn_tip_section],
+                angle=self.cn_inc
+            )
 
 ############################################# Definição da geometria com e sem o efeito solo (método das imagens) #############################################
+        surfaces_list = [self.wing_surface]
+
+        # --- EMPENAGEM HORIZONTAL ---
+        # Note: Usamos os objetos de Seção que você já criou lá em cima
+        if self.eh_b > 0.01 and self.eh_af:
+            self.eh_surface = Surface(
+                name='Horizontal_Stabilizer',
+                n_chordwise=8,
+                chord_spacing=Spacing.cosine,
+                n_spanwise=10,
+                span_spacing=Spacing.equal,
+                y_duplicate=0.0,
+                sections=[self.eh_root_section, self.eh_tip_section],
+                angle=self.eh_inc
+            )
+            surfaces_list.append(self.eh_surface)
+        else:
+            self.eh_surface = None
+
+        # --- EMPENAGEM VERTICAL ---
+        if self.ev_b > 0.01 and self.ev_af:
+            self.ev_surface = Surface(
+                name="Vertical_Stabilizer",
+                n_chordwise=8,
+                chord_spacing=Spacing.cosine, # Adicionado para evitar erro
+                n_spanwise=8,
+                span_spacing=Spacing.equal,   # Adicionado para evitar erro
+                sections=[self.ev_root_section, self.ev_tip_section]
+            )
+            surfaces_list.append(self.ev_surface)
+        else:
+            self.ev_surface = None
+
+        # --- CANARD ---
+        if self.cn_b > 0.01 and self.cn_af: # Use cn_af que definimos antes
+            self.canard_surface = Surface(
+                name="Canard",
+                n_chordwise=8,
+                chord_spacing=Spacing.cosine,
+                n_spanwise=10,
+                span_spacing=Spacing.equal,
+                y_duplicate=0.0,
+                sections=[self.cn_root_section, self.cn_tip_section],
+                angle=self.cn_inc
+            )
+            surfaces_list.append(self.canard_surface)
+        else:
+            self.canard_surface = None
 
         if ge:
             #Todas as dimensões de referência são calculadas diretamente, mas podem ser implementadas funções mais acima
@@ -345,7 +460,7 @@ class Prototype:
                                     reference_chord= self.mac,
                                     reference_span= self.ref_span,
                                     reference_point=Point(self.x_cg, 0, self.z_cg),
-                                    surfaces=[self.wing_surface, self.eh_surface, self.ev_surface],
+                                    surfaces=surfaces_list,
                                     #y_symmetry=Symmetry.symmetric,
                                     z_symmetry=Symmetry.symmetric,
                                     z_symmetry_plane= 0.00
@@ -358,7 +473,7 @@ class Prototype:
                                     reference_chord= self.mac,
                                     reference_span= self.ref_span,
                                     reference_point= Point(self.x_cg, 0, self.z_cg),
-                                    surfaces=[self.wing_surface, self.eh_surface, self.ev_surface],
+                                    surfaces=surfaces_list,
                                     #y_symmetry=Symmetry.symmetric
                                     )
 
@@ -367,7 +482,13 @@ class Prototype:
     # ====================================================
 
     def get_geometry(self, ground_effect=False):
-        """Retorna a geometria configurada com ou sem efeito solo."""
+        """Retorna a geometria filtrando apenas superfícies que foram instanciadas."""
+        surfaces_list = [self.wing_surface]
+        
+        # Se a superfície não for None, ela entra na lista
+        if self.eh_surface: surfaces_list.append(self.eh_surface)
+        if self.ev_surface: surfaces_list.append(self.ev_surface)
+        if self.canard_surface: surfaces_list.append(self.canard_surface)
         if ground_effect:
             return Geometry(
                 name="Prototype_GE",
@@ -375,7 +496,7 @@ class Prototype:
                 reference_chord=self.mac,
                 reference_span=self.ref_span,
                 reference_point=Point(self.x_cg, 0, self.z_cg),
-                surfaces=[self.wing_surface, self.eh_surface, self.ev_surface],
+                surfaces=surfaces_list,
                 z_symmetry=Symmetry.symmetric,
                 z_symmetry_plane=0.00
             )

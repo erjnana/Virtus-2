@@ -7,13 +7,13 @@ proc_case=[]
 if (np > 1):
     for p in range(np):
 
-        crp= om.CaseReader('./log/evolutions/banana_2026_02_02_1917.db'+str(p))
+        crp= om.CaseReader('./log/evolutions/banana_2026_02_05_2257.db'+str(p))
         driver_cases = crp.list_cases('driver')
         cases = crp.get_cases()
         proc_case.append(cases)
 
 else:
-    crp= om.CaseReader('./log/evolutions/banana_2026_02_02_1917.db')
+    crp= om.CaseReader('./log/evolutions/banana_2026_02_05_2257.db')
     driver_cases = crp.list_cases('driver')
     cases = crp.get_cases()
     proc_case.append(cases)
@@ -69,7 +69,7 @@ for proc_n in range(len(proc_case)):
             
             print(
                 '\n Objetivos\n',
-                  '     Carga paga=', float(case.outputs['individual_scorer.score'])
+                  '     Pontuação da competição =', float(case.outputs['individual_scorer.score'])
                   )
             
             print(

@@ -64,7 +64,7 @@ prob.driver = om.DifferentialEvolutionDriver()
 prob.driver.options['debug_print'] = ['desvars']
 
 # Tamanho da população
-prob.driver.options['pop_size'] = 20
+prob.driver.options['pop_size'] = 40
 
 # Parâmetros de penalização das restrições
 prob.driver.options['penalty_parameter'] = 20.0
@@ -216,6 +216,19 @@ prob.model.add_constraint(
     lower=0.0
 )
 
+# Garante que o Canard estole antes da asa (Segurança Canard)
+# Se stall_safety_margin > 0, o canard atinge o Cl_max dele primeiro.
+prob.model.add_constraint(
+    'individual_scorer.stall_safety_margin',
+    lower=0.02 # Margem de segurança de 2% de Cl
+)
+
+# Otimização de Sustentação: Garante que a asa não opere acima do Cl_max real
+# Isso substitui ou complementa o stall_constraint antigo
+prob.model.add_constraint(
+    'individual_scorer.cl_max_3d_wing',
+    upper=1.5 # Substitua pelo Cl_max do seu perfil de asa
+)
 
 # =========================
 # SETUP E EXECUÇÃO
