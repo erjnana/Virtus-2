@@ -7,7 +7,7 @@ Aqui estão todos os dados que são necessários serem ajustados antes de rodar 
 # CONFIGURAÇÃO DO PROJETO
 # =========================
 # Opções: "convencional", "canard", "asa_voadora"
-P_CONFIG = "canard"
+P_CONFIG = "convencional"
 
 # =========================
 # IDENTIDADE DO PROJETO
@@ -19,9 +19,9 @@ PROJECT_NAME = f"{NAME}_{P_CONFIG}"
 # PONTUAÇÃO ESTIMADA
 # =========================
 
-NR_DEFAULT = 110.38         # Nota de relatório estimada
+NR_DEFAULT = 130.00         # Nota de relatório estimada
 PEE_FACTOR = 50             # Fator de pontuação eficiência estrutural
-APRESENTACAO = 30.58        # Nota da apresentação
+APRESENTACAO = 32.00        # Nota da apresentação
 VIDEOVOO = 30.0             # Nota do vídeo de voo
 
 if P_CONFIG == "convencional":
@@ -44,11 +44,11 @@ pot = 600.0  # Potência máxima do motor em W
 # PERFIS DO AVIÃO
 # ============================================================
 
-root_af='random'            # Perfil da raiz da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
-tip_af='random'             # Perfil da ponta da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+root_af='MIN1112'            # Perfil da raiz da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+tip_af='eppler421'             # Perfil da ponta da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
 eh_af='NACA0012'            # Perfil do EH (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
 ev_af ='NACA0012'           # Perfil do EV (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
-cn_af = 'random'            # Perfil do canard (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+cn_af = 'NACA0012'            # Perfil do canard (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
 
 # ============================================================
 # RESTRIÇÕES AERODINÂMICAS GLOBAIS
@@ -98,7 +98,7 @@ INDIVIDUAL_INPUTS = [
 # =========================
 
 DEFAULT_VALUES = {
-    'w_bt': 3.5,        #envergadura
+    'w_bt': 2.0,        #envergadura
     'w_baf': 0.8,       #região de transição (% da envergadura)
     'w_cr': 0.4,        #corda da raiz
     'w_ci': 0.70,       #corda da transição (% da raiz)
@@ -135,17 +135,17 @@ DEFAULT_VALUES = {
 # =========================
 
 DESIGN_VARIABLES = {
-    'w_bt':     {'lower': 1.5,  'upper': 3.5},
+    'w_bt':     {'lower': 1.5,  'upper': 2.5},
     'w_baf':    {'lower': 0.7, 'upper': 0.9},
     'w_cr':     {'lower': 0.25, 'upper': 0.70},
     'w_ci':     {'lower': 0.60, 'upper': 0.85},
     'w_ct':     {'lower': 0.5, 'upper': 0.8},
-    'w_z':      {'lower': 0.15, 'upper': 0.5},
-    'w_inc':    {'lower': -5,  'upper': 8},
+    'w_z':      {'lower': 0.15, 'upper': 0.3},
+    'w_inc':    {'lower': -3,  'upper': 3},
     'w_wo':     {'lower': -5,  'upper': 5},
     'w_d':      {'lower': -2,  'upper': 3},
 
-    'eh_b':     {'lower': 0.8,  'upper': 1.3},
+    'eh_b':     {'lower': 0.5,  'upper': 1.3},
     'eh_cr':    {'lower': 0.15, 'upper': 0.40},
     'eh_ct':    {'lower': 0.7, 'upper': 0.95},
     'eh_inc':   {'lower': -3,  'upper': 3},
@@ -158,11 +158,11 @@ DESIGN_VARIABLES = {
 
     'motor_x':  {'lower': -0.4, 'upper': -0.15},
 
-    'cn_b': {'lower': 0.3, 'upper': 1.5},
-    'cn_cr': {'lower': 0.15, 'upper': 0.4},
-    'cn_ct': {'lower': 0.6, 'upper': 1.0},
+    'cn_b': {'lower': 0.3, 'upper': 1.3},
+    'cn_cr': {'lower': 0.15, 'upper': 0.25},
+    'cn_ct': {'lower': 0.3, 'upper': 1.0},
     'cn_inc': {'lower': 0.0, 'upper': 6.0},
-    'cn_x': {'lower': -0.6, 'upper': 0.0},
-    'cn_d': {'lower': 0.0, 'upper': 10.0},
+    'cn_x': {'lower': -0.6, 'upper': -0.25},
+    'cn_d': {'lower': -2.0, 'upper': 10.0},
     'cn_z': {'lower': 0.05, 'upper': 0.7},
 }

@@ -206,8 +206,8 @@ class Individual(om.ExplicitComponent):
         # Pegar os Cls máximos encontrados na geometria 3D durante o trim
         # Você deve garantir que seu Simulator tenha acesso a esses valores do AVL
         cl_max_3d_asa    = simulator.get_max_cl_surface("Wing")
-        cl_max_3d_canard = simulator.get_max_cl_surface("canard") if cn_b > 0 else 0.0
-        cl_max_3d_eh     = simulator.get_max_cl_surface("eh") if eh_b > 0 else 0.0
+        cl_max_3d_canard = simulator.get_max_cl_surface("Canard") if cn_b > 0 else 0.0
+        cl_max_3d_eh     = simulator.get_max_cl_surface("Eh") if eh_b > 0 else 0.0
 
         # Pegar os Cls limites (2D) dos perfis carregados
         cl_limit_asa    = dados_root['cl_max']

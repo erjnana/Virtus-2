@@ -1,6 +1,7 @@
 from prototype import *
 from simulator import *
 from performance import *
+from airfoil_loader import *
 import matplotlib.pyplot as plt
 import time
 
@@ -83,29 +84,46 @@ Este arquivo contém alguns testes que foram úteis para debugging durante o des
 # plt.show()
 # '''
 
-aviao1= Prototype ( w_cr= 0.57, w_ct= 0.40975013961162043, w_bt= 3.5, w_baf=0.8, w_ci=0.8, w_wo=0.0,w_d=1, eh_cr=0.27, eh_ct=0.9, ev_ct=0.9, w_z= 0.18220990045077817, w_inc= 0.1923063435461832, eh_b= 0.8735965804721229, eh_inc= 2.9476393667342435, ev_b= 0.22514748539953888, eh_x= 1.002904353165168, eh_z= 0.3437012200770051, motor_x= -0.2247097169299502, ge= False)
-aviao1_ge= Prototype ( w_cr= 0.57, w_ct= 0.40975013961162043, w_bt= 3.5, w_baf=0.8, w_ci=0.8, w_wo=0.0,w_d=1, eh_cr=0.27, eh_ct=0.9, ev_ct=0.9, w_z= 0.18220990045077817, w_inc= 0.1923063435461832, eh_b= 0.8735965804721229, eh_inc= 2.9476393667342435, ev_b= 0.22514748539953888, eh_x= 1.002904353165168, eh_z= 0.3437012200770051, motor_x= -0.2247097169299502, ge= True)
-aviao1.print_geometry_info()
-simulation1= Simulator(aviao1,aviao1_ge)
-simulation1.run_a()
-simulation1.scorer()
-simulation1.print_coeffs()
+# aviao1= Prototype ( w_cr= 0.57, w_ct= 0.40975013961162043, w_bt= 3.5, w_baf=0.8, w_ci=0.8, w_wo=0.0,w_d=1, eh_cr=0.27, eh_ct=0.9, ev_ct=0.9, w_z= 0.18220990045077817, w_inc= 0.1923063435461832, eh_b= 0.8735965804721229, eh_inc= 2.9476393667342435, ev_b= 0.22514748539953888, eh_x= 1.002904353165168, eh_z= 0.3437012200770051, motor_x= -0.2247097169299502, ge= False)
+# aviao1_ge= Prototype ( w_cr= 0.57, w_ct= 0.40975013961162043, w_bt= 3.5, w_baf=0.8, w_ci=0.8, w_wo=0.0,w_d=1, eh_cr=0.27, eh_ct=0.9, ev_ct=0.9, w_z= 0.18220990045077817, w_inc= 0.1923063435461832, eh_b= 0.8735965804721229, eh_inc= 2.9476393667342435, ev_b= 0.22514748539953888, eh_x= 1.002904353165168, eh_z= 0.3437012200770051, motor_x= -0.2247097169299502, ge= True)
+# aviao1.print_geometry_info()
+# simulation1= Simulator(aviao1,aviao1_ge)
+# simulation1.run_a()
+# simulation1.scorer()
+# simulation1.print_coeffs()
 
-# aviao2= Prototype( w_bt= 3.2321286257332065, w_baf= 0.9, w_cr= 0.45, w_ci= 0.8547042296684797, w_ct= 0.8, w_z= 0.18, w_inc= -0.3960870755918585, w_wo= 0.0, w_d= 2.1132179687299235, eh_b= 0.6197954432211882, eh_cr= 0.24309488336263088, eh_ct= 0.8, eh_inc= -2.0, ev_b= 0.4, ev_ct= 0.7900185499329802, eh_x= 1.3699514929079597, eh_z= 0.3, motor_x= -0.4,ge = False)
-# aviao2_ge= Prototype( w_bt= 3.2321286257332065, w_baf= 0.9, w_cr= 0.45, w_ci= 0.8547042296684797, w_ct= 0.8, w_z= 0.18, w_inc= -0.3960870755918585, w_wo= 0.0, w_d= 2.1132179687299235, eh_b= 0.6197954432211882, eh_cr= 0.24309488336263088, eh_ct= 0.8, eh_inc= -2.0, ev_b= 0.4, ev_ct= 0.7900185499329802, eh_x= 1.3699514929079597, eh_z= 0.3, motor_x= -0.4, ge = True)
-# aviao2.print_geometry_info()
-# simulation2= Simulator(aviao2,aviao2_ge)
-# simulation2.run_a()
-# simulation2.scorer()
-# simulation2.print_coeffs()
+# Selecionar um perfil de cada categoria para usar nos testes
+if airfoils_database_asa:
+    af_root = list(airfoils_database_asa.values())[0]
+    af_tip = list(airfoils_database_asa.values())[0]
+else:
+    raise ValueError("Nenhum perfil de asa foi carregado")
 
-# a0 = Case(name='a0', alpha=30, X_cg= aviao1.x_cg, Z_cg= aviao1.z_cg)
+if airfoils_database_eh:
+    af_eh = list(airfoils_database_eh.values())[0]
+else:
+    raise ValueError("Nenhum perfil de EH foi carregado")
 
-# session=Session(geometry=aviao1.geometry,cases=[a0])
+if airfoils_database_ev:
+    af_ev = list(airfoils_database_ev.values())[0]
+else:
+    raise ValueError("Nenhum perfil de EV foi carregado")
 
-# session._run_analysis
+aviao2= Prototype( w_bt= 3.2321286257332065, w_baf= 0.9, w_cr= 0.45, w_ci= 0.8547042296684797, w_ct= 0.8, w_z= 0.18, w_inc= -0.3960870755918585, w_wo= 0.0, w_d= 2.1132179687299235, eh_b= 0.6197954432211882, eh_cr= 0.24309488336263088, eh_ct= 0.8, eh_inc= -2.0, ev_b= 0.4, ev_ct= 0.7900185499329802, eh_x= 1.3699514929079597, eh_z= 0.3, motor_x= -0.4, ge= False, af_root_data=af_root, af_tip_data=af_tip, af_eh_data=af_eh, af_ev_data=af_ev)
+aviao2_ge= Prototype( w_bt= 3.2321286257332065, w_baf= 0.9, w_cr= 0.45, w_ci= 0.8547042296684797, w_ct= 0.8, w_z= 0.18, w_inc= -0.3960870755918585, w_wo= 0.0, w_d= 2.1132179687299235, eh_b= 0.6197954432211882, eh_cr= 0.24309488336263088, eh_ct= 0.8, eh_inc= -2.0, ev_b= 0.4, ev_ct= 0.7900185499329802, eh_x= 1.3699514929079597, eh_z= 0.3, motor_x= -0.4, ge= True, af_root_data=af_root, af_tip_data=af_tip, af_eh_data=af_eh, af_ev_data=af_ev)
+aviao2.print_geometry_info()
+simulation2= Simulator(aviao2,aviao2_ge)
+simulation2.run_a()
+simulation2.scorer()
+simulation2.print_coeffs()
 
-# results= session.get_results()
+a0 = Case(name='a0', alpha=30, X_cg= aviao2.x_cg, Z_cg= aviao2.z_cg)
 
-# with open('./out.json', 'w') as f:
-#         f.write(json.dumps(results))
+session=Session(geometry=aviao2.geometry,cases=[a0])
+
+session._run_analysis
+
+results= session.get_results()
+
+with open('./out.json', 'w') as f:
+        f.write(json.dumps(results))

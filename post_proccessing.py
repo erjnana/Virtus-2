@@ -7,13 +7,13 @@ proc_case=[]
 if (np > 1):
     for p in range(np):
 
-        crp= om.CaseReader('./log/evolutions/banana_2026_02_05_2257.db'+str(p))
+        crp= om.CaseReader('./log/evolutions/banana_canard_2026_02_11_2301.db'+str(p))
         driver_cases = crp.list_cases('driver')
         cases = crp.get_cases()
         proc_case.append(cases)
 
 else:
-    crp= om.CaseReader('./log/evolutions/banana_2026_02_05_2257.db')
+    crp= om.CaseReader('./log/evolutions/banana_canard_2026_02_11_2301.db')
     driver_cases = crp.list_cases('driver')
     cases = crp.get_cases()
     proc_case.append(cases)
@@ -36,9 +36,10 @@ for proc_n in range(len(proc_case)):
             #and (case.outputs['individual_scorer.ar'] >= 5)
             #and (case.outputs['individual_scorer.vht'] <= 0.8)
             and (case.outputs['individual_scorer.vvt'] >= vvt_min)
-            and (case.outputs['individual_scorer.cp'] >= 12.900)
+            #and (case.outputs['individual_scorer.cp'] >= 12.900)
             #and (case.outputs['individual_scorer.g_const'] <= 2.9)
             #and (case.outputs['individual_scorer.g_const'] >= 2.8)
+            and (case.outputs['individual_scorer.score'] >= 150.00)
             ):
 
             print('-------------- PROTOTIPO:', case.name[-4:]+'-'+str(proc_n)+' --------------\n')

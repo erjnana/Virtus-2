@@ -132,8 +132,8 @@ class Prototype:
         ev_b, ev_ct,
 
         # ---------------- CANARD ----------------
-        cn_b=0.0, cn_cr=0.0, cn_ct=0.0, 
-        cn_inc=0.0, cn_x=0.0, cn_d=0.0, cn_z=0.0,
+        cn_b, cn_cr, cn_ct, 
+        cn_inc, cn_x, cn_d, cn_z,
         
         # ---------------- MOTOR ----------------
         motor_x=-0.218, motor_z=0.30,
@@ -201,12 +201,11 @@ class Prototype:
         # ====================================================
         # CANARD (Conversão e Armazenamento)
         # ====================================================
-        cn_cr_m = cn_cr # Supondo que cn_cr venha em metros ou conforme sua lógica
-        cn_ct_m = cn_ct * cn_cr_m
+        cn_ct = cn_ct * cn_cr
         
         self.cn_b = cn_b
-        self.cn_cr = cn_cr_m
-        self.cn_ct = cn_ct_m
+        self.cn_cr = cn_cr
+        self.cn_ct = cn_ct
         self.cn_inc = cn_inc
         self.cn_x = cn_x
         self.cn_z = cn_z

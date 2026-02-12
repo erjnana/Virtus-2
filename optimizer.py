@@ -52,6 +52,7 @@ prob.model.set_input_defaults('individual_scorer.idx_asa_root', 0.0)
 prob.model.set_input_defaults('individual_scorer.idx_asa_tip', 0.0)
 prob.model.set_input_defaults('individual_scorer.idx_eh', 0.0)
 prob.model.set_input_defaults('individual_scorer.idx_ev', 0.0)
+prob.model.set_input_defaults('individual_scorer.idx_cn', 0.0)
 
 # =========================
 # DRIVER DE OTIMIZAÇÃO
@@ -121,6 +122,9 @@ if eh_af.lower() == "random":
 
 if ev_af.lower() == "random":
     prob.model.add_design_var('individual_scorer.idx_ev', lower=0, upper=len(LISTA_EV)-1)
+
+if cn_af.lower() == "random":
+    prob.model.add_design_var('individual_scorer.idx_cn', lower=0, upper=len(LISTA_EV)-1)
 
 # Aqui o MDO fica sabendo:
 # - quais variáveis ele pode mexer
@@ -227,7 +231,7 @@ prob.model.add_constraint(
 # Isso substitui ou complementa o stall_constraint antigo
 prob.model.add_constraint(
     'individual_scorer.cl_max_3d_wing',
-    upper=1.5 # Substitua pelo Cl_max do seu perfil de asa
+    upper=1.7 # Substitua pelo Cl_max do seu perfil de asa
 )
 
 # =========================

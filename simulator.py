@@ -176,6 +176,33 @@ class Simulator():
             pass
             
         return 0.0
+    
+    def print_coeffs(self):
+        aero_coeffs = pd.DataFrame(
+            [self.cl, self.cd, self.cm, self.deflex],
+            index=['CL', 'CD', 'CM', 'Prof']
+        ).T
+
+        print('--------------OUTPUTS-----------------\n')
+        print('--------------Aerodinâmica-----------------')
+        print('CL em corrida=', self.cl_ge.get(0, 'N/A'))
+        print('CD em corrida=', self.cd_ge.get(0, 'N/A'))
+
+        print('Transição=', round(self.prototype.w_baf / self.prototype.w_bt, 3) * 100, '% da envergadura')
+        print('Altura do EH com relação à asa=', round(self.prototype.eh_z_const, 3), 'm')
+        print('Área alar=', round(self.prototype.s_ref, 3), 'm^2')
+        print('AR=', round(self.prototype.ar, 2))
+        print('AR do EH=', round(self.prototype.eh_ar, 2))
+        print('M.A.C.=', round(self.prototype.mac, 3), 'm')
+
+        print('\n--------------Controle e Estabilidade-----------------')
+        print('VHT=', round(self.prototype.vht, 4))
+        print('VVT=', round(self.prototype.vvt, 4))
+        print('X_CG=', round(self.prototype.x_cg_p, 3), '% da corda da asa')
+        print('Z_CG=', round(self.prototype.z_cg, 3), 'm do chão')
+        print('CG=', round(self.prototype.low_cg, 3), 'm abaixo da asa')
+        print('Ângulo de trimagem=', round(self.a_trim, 2), 'graus')
+        print('Margem Estática=', round(self.me, 3))
 
     ###########################################################################
     # MÉTODO PRINCIPAL DE PONTUAÇÃO
@@ -250,39 +277,41 @@ class Simulator():
         pen = a_trim_pen + x_cg_p_pen
         self.score -= pen
 
+        self.print_coeffs()
+
         return self.score, self.competition_score
 
     ###########################################################################
     # MÉTODO PARA PRINTAR COEFICIENTES E INFO
     ###########################################################################
-    def print_coeffs(self):
-        aero_coeffs = pd.DataFrame(
-            [self.cl, self.cd, self.cm, self.deflex],
-            index=['CL', 'CD', 'CM', 'Prof']
-        ).T
+    # def print_coeffs(self):
+    #     aero_coeffs = pd.DataFrame(
+    #         [self.cl, self.cd, self.cm, self.deflex],
+    #         index=['CL', 'CD', 'CM', 'Prof']
+    #     ).T
 
-        print('--------------OUTPUTS-----------------\n')
-        print('--------------Aerodinâmica-----------------')
-        print('Coeficientes aerodinâmicos:\n', aero_coeffs, sep='')
-        print('CL em corrida=', self.cl_ge.get(0, 'N/A'))
-        print('CD em corrida=', self.cd_ge.get(0, 'N/A'))
+    #     print('--------------OUTPUTS-----------------\n')
+    #     print('--------------Aerodinâmica-----------------')
+    #     print('Coeficientes aerodinâmicos:\n', aero_coeffs, sep='')
+    #     print('CL em corrida=', self.cl_ge.get(0, 'N/A'))
+    #     print('CD em corrida=', self.cd_ge.get(0, 'N/A'))
 
-        print('\nEnvergadura=', round(self.prototype.w_bt, 3), 'm')
-        print('Transição=', round(self.prototype.w_baf / self.prototype.w_bt, 3) * 100, '% da envergadura')
-        print('Altura do EH com relação à asa=', round(self.prototype.eh_z_const, 3), 'm')
-        print('Área alar=', round(self.prototype.s_ref, 3), 'm^2')
-        print('AR=', round(self.prototype.ar, 2))
-        print('AR do EH=', round(self.prototype.eh_ar, 2))
-        print('M.A.C.=', round(self.prototype.mac, 3), 'm')
+    #     print('\nEnvergadura=', round(self.prototype.w_bt, 3), 'm')
+    #     print('Transição=', round(self.prototype.w_baf / self.prototype.w_bt, 3) * 100, '% da envergadura')
+    #     print('Altura do EH com relação à asa=', round(self.prototype.eh_z_const, 3), 'm')
+    #     print('Área alar=', round(self.prototype.s_ref, 3), 'm^2')
+    #     print('AR=', round(self.prototype.ar, 2))
+    #     print('AR do EH=', round(self.prototype.eh_ar, 2))
+    #     print('M.A.C.=', round(self.prototype.mac, 3), 'm')
 
-        print('\n--------------Controle e Estabilidade-----------------')
-        print('VHT=', round(self.prototype.vht, 4))
-        print('VVT=', round(self.prototype.vvt, 4))
-        print('X_CG=', round(self.prototype.x_cg_p, 3), '% da corda da asa')
-        print('Z_CG=', round(self.prototype.z_cg, 3), 'm do chão')
-        print('CG=', round(self.prototype.low_cg, 3), 'm abaixo da asa')
-        print('Ângulo de trimagem=', round(self.a_trim, 2), 'graus')
-        print('Margem Estática=', round(self.me, 3))
+    #     print('\n--------------Controle e Estabilidade-----------------')
+    #     print('VHT=', round(self.prototype.vht, 4))
+    #     print('VVT=', round(self.prototype.vvt, 4))
+    #     print('X_CG=', round(self.prototype.x_cg_p, 3), '% da corda da asa')
+    #     print('Z_CG=', round(self.prototype.z_cg, 3), 'm do chão')
+    #     print('CG=', round(self.prototype.low_cg, 3), 'm abaixo da asa')
+    #     print('Ângulo de trimagem=', round(self.a_trim, 2), 'graus')
+    #     print('Margem Estática=', round(self.me, 3))
 
         # print('--------------Perfis e Estol-----------------')
         # self.prototype.print_geometry_info()
