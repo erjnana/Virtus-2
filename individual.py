@@ -80,9 +80,9 @@ class Individual(om.ExplicitComponent):
         self.add_output('low_cg', val=0.0)
         self.add_output('x_cg_p', val=0.0)
 
-        self.add_output('cl_max_3d_wing', val=0.0)
-        self.add_output('cl_max_3d_canard', val=0.0)
-        self.add_output('stall_safety_margin', val=0.0) # Diferença entre estol do Canard e da Asa
+        #self.add_output('cl_max_3d_wing', val=0.0)
+        #self.add_output('cl_max_3d_canard', val=0.0)
+        #self.add_output('stall_safety_margin', val=0.0) # Diferença entre estol do Canard e da Asa
 
         # ======= RESTRIÇÃO DE STALL =======
         # Margem de stall (deve ser >= 0)
@@ -204,60 +204,60 @@ class Individual(om.ExplicitComponent):
 
         # Pegar os Cls máximos encontrados na geometria 3D durante o trim
         # Você deve garantir que seu Simulator tenha acesso a esses valores do AVL
-        cl_max_3d_asa    = simulator.get_max_cl_surface("Wing")
-        cl_max_3d_canard = simulator.get_max_cl_surface("Canard") if cn_b > 0 else 0.0
-        cl_max_3d_eh     = simulator.get_max_cl_surface("Eh") if eh_b > 0 else 0.0
+        #cl_max_3d_asa    = simulator.get_max_cl_surface("Wing")
+        #cl_max_3d_canard = simulator.get_max_cl_surface("Canard") if cn_b > 0 else 0.0
+        #cl_max_3d_eh     = simulator.get_max_cl_surface("Eh") if eh_b > 0 else 0.0
 
         # Pegar os Cls limites (2D) dos perfis carregados
-        cl_limit_asa    = dados_root['cl_max']
+        # cl_limit_asa    = dados_root['cl_max']
 
-        if prototype.cn_b > 0.01 and dados_canard is not None:
-            cl_limit_canard = dados_canard['cl_max']
-        else:
-            cl_limit_canard = 1.0 # Valor genérico que não afetará a lógica se o Canard não existir
+        # if prototype.cn_b > 0.01 and dados_canard is not None:
+        #     cl_limit_canard = dados_canard['cl_max']
+        # else:
+        #     cl_limit_canard = 1.0 # Valor genérico que não afetará a lógica se o Canard não existir
 
-        if prototype.eh_b > 0.01 and dados_eh is not None:
-            cl_limit_eh = dados_eh['cl_max']
-        else:
-            cl_limit_eh = 1.0 # Valor genérico que não afetará a lógica se o EH não existir
+        # if prototype.eh_b > 0.01 and dados_eh is not None:
+        #     cl_limit_eh = dados_eh['cl_max']
+        # else:
+        #     cl_limit_eh = 1.0 # Valor genérico que não afetará a lógica se o EH não existir
 
-        # Calcular a "distância" para o estol de cada superfície (Margem de Sustentação)
-        # Quanto menor o valor, mais perto do estol a superfície está.
-        margem_w = cl_limit_asa - cl_max_3d_asa
+        # # Calcular a "distância" para o estol de cada superfície (Margem de Sustentação)
+        # # Quanto menor o valor, mais perto do estol a superfície está.
+        # margem_w = cl_limit_asa - cl_max_3d_asa
 
-        # Margem do Canard (com proteção)
-        if cn_b > 0.01 and dados_canard is not None:
-            cl_limit_canard = dados_canard['cl_max']
-            margem_cn = cl_limit_canard - cl_max_3d_canard
-        else:
-            margem_cn = 99.0 
+        # # Margem do Canard (com proteção)
+        # if cn_b > 0.01 and dados_canard is not None:
+        #     cl_limit_canard = dados_canard['cl_max']
+        #     margem_cn = cl_limit_canard - cl_max_3d_canard
+        # else:
+        #     margem_cn = 99.0 
 
-        # Margem do EH (com proteção)
-        if eh_b > 0.01 and dados_eh is not None:
-            cl_limit_eh = dados_eh['cl_max']
-            margem_eh = cl_limit_eh - cl_max_3d_eh
-        else:
-            margem_eh = 99.0
+        # # Margem do EH (com proteção)
+        # if eh_b > 0.01 and dados_eh is not None:
+        #     cl_limit_eh = dados_eh['cl_max']
+        #     margem_eh = cl_limit_eh - cl_max_3d_eh
+        # else:
+        #     margem_eh = 99.0
 
-        # ======= LÓGICA DE RESTRIÇÃO (CONSOLIDADA) =======
-        if cn_b > 0.01:
-            # Canard deve estolar antes da Asa, e Asa antes do EH
-            c1 = margem_w - margem_cn   
-            c2 = margem_eh - margem_w   
-            ordem_estol = min(c1, c2)
+        # # ======= LÓGICA DE RESTRIÇÃO (CONSOLIDADA) =======
+        # if cn_b > 0.01:
+        #     # Canard deve estolar antes da Asa, e Asa antes do EH
+        #     c1 = margem_w - margem_cn   
+        #     c2 = margem_eh - margem_w   
+        #     ordem_estol = min(c1, c2)
             
-            # Cálculo da margem de segurança específica para Canard
-            margin_wing = prototype.w_root_clmax - cl_max_3d_asa
-            margin_canard = dados_canard['cl_max'] - cl_max_3d_canard
-            outputs['stall_safety_margin'] = margin_wing - margin_canard
-        else:
-            # Convencional: Asa deve estolar antes do EH
-            ordem_estol = margem_eh - margem_w
-            outputs['stall_safety_margin'] = 99.0 # Valor neutro
+        #     # Cálculo da margem de segurança específica para Canard
+        #     margin_wing = prototype.w_root_clmax - cl_max_3d_asa
+        #     margin_canard = dados_canard['cl_max'] - cl_max_3d_canard
+        #     outputs['stall_safety_margin'] = margin_wing - margin_canard
+        # else:
+        #     # Convencional: Asa deve estolar antes do EH
+        #     ordem_estol = margem_eh - margem_w
+        #     outputs['stall_safety_margin'] = 99.0 # Valor neutro
 
-        # Segurança de Alpha de Trim
-        seguranca_trim = ALPHA_STALL_MIN_DEG - simulator.a_trim
-        outputs['stall_constraint'] = min(ordem_estol, seguranca_trim)
+        # # Segurança de Alpha de Trim
+        # seguranca_trim = ALPHA_STALL_MIN_DEG - simulator.a_trim
+        # outputs['stall_constraint'] = min(ordem_estol, seguranca_trim)
 
         # ======= DEMAIS OUTPUTS =======
         outputs['score'] = score
@@ -270,7 +270,7 @@ class Individual(om.ExplicitComponent):
         outputs['low_cg'] = prototype.low_cg
         outputs['x_cg_p'] = prototype.x_cg_p
         outputs['cp'] = simulator.cp
-        outputs['cl_max_3d_wing'] = cl_max_3d_asa
-        outputs['cl_max_3d_canard'] = cl_max_3d_canard
+        #outputs['cl_max_3d_wing'] = cl_max_3d_asa
+        #outputs['cl_max_3d_canard'] = cl_max_3d_canard
         outputs['eh_z_const'] = prototype.eh_z_const
         

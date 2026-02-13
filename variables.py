@@ -7,7 +7,7 @@ Aqui estão todos os dados que são necessários serem ajustados antes de rodar 
 # CONFIGURAÇÃO DO PROJETO
 # =========================
 # Opções: "convencional", "canard", "asa_voadora"
-P_CONFIG = "canard"
+P_CONFIG = "convencional"
 
 # =========================
 # IDENTIDADE DO PROJETO
@@ -119,7 +119,7 @@ DEFAULT_VALUES = {
     'eh_x': 0.8,        #distância do eh
     'eh_z': 0.4,        #altura do eh
 
-    'motor_x': -0.2,    #distância do motor
+    'motor_x': -0.4,    #distância do motor
 
     'cn_b': 1.0,          #envergadura do canard
     'cn_cr': 0.2,       #corda da raiz do canard
