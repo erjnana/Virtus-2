@@ -46,22 +46,54 @@ class Simulator():
     ###########################################################################
     def check_stall(self, results):
         limits = {
-            'Wing': self.prototype.w_root_clmax,
-            'Eh': self.prototype.af_eh_data['cl_max'] if hasattr(self.prototype, 'af_eh_data') else 1.2,
-            'Canard': self.prototype.af_canard_data['cl_max'] if hasattr(self.prototype, 'af_canard_data') else 1.2
+            'Wing': [self.prototype.af_root_data['cl_max'] if hasattr(self.prototype, 'af_root_data') else 1.2, self.prototype.w_bt],
+            'Eh': [self.prototype.af_eh_data['cl_max'] if hasattr(self.prototype, 'af_eh_data') else 1.2, self.prototype.eh_b],
+            'Canard': [self.prototype.af_canard_data['cl_max'] if hasattr(self.prototype, 'af_canard_data') else 1.2, self.prototype.cn_b]
         }
 
-        for surf_name, cl_limit in limits.items():
-            if surf_name in results['a']['StripForces']:
-                cls = results['a']['StripForces'][surf_name]['cl']
-                max_cl_3d = max(cls)
-                if max_cl_3d >= cl_limit:
-                    # Encontra a posição y do estol para o print do run_a
-                    idx = np.argmax(cls)
-                    y_stall = results['a']['StripForces'][surf_name]['Yle'][idx]
-                    return True, y_stall 
+        for surf_name, (cl_limit, max_span) in limits.items():
+            for surf_name in results['a']['StripForces']:
 
-        return False, 0.0
+                if surf_name == 'Wing':
+                    stall= False
+                    b_stall=0
+                    for panel_n in range(int(len(results['a']['StripForces']['Wing']['Yle'])/2)):
+                        if results['a']['StripForces']['Wing']['Yle'][panel_n] <= self.prototype.w_baf/2:
+                            clmax= self.prototype.w_root_clmax
+                            if results['a']['StripForces']['Wing']['cl'][panel_n] >= clmax:
+                                stall= True
+                                b_stall= results['a']['StripForces']['Wing']['Yle'][panel_n] / (self.prototype.w_bt/2) #b_stall é o ponto de estol em % da envergadur
+                                return True, surf_name, b_stall
+
+                            else:
+                                stall= False
+
+                        else:
+                            af_len= (self.prototype.w_bt - self.prototype.w_baf)/2
+                            af_len_perc= (results['a']['StripForces']['Wing']['Yle'][panel_n] - (self.prototype.w_baf/2))/af_len
+                            clmax= (af_len_perc)*self.prototype.w_tip_clmax + (1-af_len_perc)*self.prototype.w_root_clmax           # Interpolando os clmáx na região afilada
+                            if results['a']['StripForces']['Wing']['cl'][panel_n] >= clmax:
+                                stall= True
+                                b_stall= results['a']['StripForces']['Wing']['Yle'][panel_n] / (self.prototype.w_bt/2) #b_stall é o ponto de estol em % da envergadura
+                                
+                                return True, surf_name, b_stall
+
+                            else:
+                                stall= False
+
+                    #return True, surf_name, b_stall
+                
+                else:
+                    cls = results['a']['StripForces'][surf_name]['cl']
+                    max_cl_3d = max(cls)
+                    if max_cl_3d >= cl_limit:
+                        # Encontra a posição y do estol para o print do run_a
+                        idx = np.argmax(cls)
+                        y_stall = results['a']['StripForces'][surf_name]['Yle'][idx]
+                        perc_stall = (y_stall / (max_span/2)) * 100
+                        return True, surf_name, perc_stall 
+
+        return False, 0.0, 0.0
 
     ###########################################################################
     # MÉTODOS DE SIMULAÇÃO
@@ -82,7 +114,7 @@ class Simulator():
         self.last_results = a_results
 
         try:
-            stall, b_stall = self.check_stall(a_results) # <--- Recebe o b_stall
+            stall, surf_stall, b_stall = self.check_stall(a_results) # <--- Recebe o b_stall
             if not stall:
                 self.deflex[a] = a_results['a']['Totals']['elevator']
                 self.cl[a] = a_results['a']['Totals']['CLtot']
@@ -95,8 +127,8 @@ class Simulator():
                 raise RuntimeError(f"\nEstol detectado em alfa={a}")
             return a_results
         except Exception as e:
-            stall, b_stall = self.check_stall(a_results)
-            print(f'    ⚠️Estol em {b_stall*100:.1f}% da envergadura')
+            stall, surf_stall, b_stall = self.check_stall(a_results)
+            print(f'    ⚠️Estol em {surf_stall} na posição {b_stall:.1f}% da envergadura')
             raise e
 
     def run_ge(self):
@@ -124,10 +156,10 @@ class Simulator():
             try:
                 self.run_a(a)
             except:
-                self.a_stall = a - 1
-                self.clmax = self.cl[a - 1]
-                print(f'    ⚠️ Ângulo de estol entre {a-1} e {a} graus')
-                break
+                self.a_stall = a - 2
+                self.clmax = self.cl[a - 2]
+                print(f'    ⚠️ Ângulo de estol entre {a-2} e {a} graus')
+                return False
         for a in np.arange(12, 31, 1):
             try:
                 self.run_a(a)
@@ -136,8 +168,8 @@ class Simulator():
                 self.clmax = self.cl[a - 1]
                 print(f'    ⚠️ Ângulo de estol entre {a-1} e {a} graus')
                 break
-        self.prototype.ALPHA_STALL_MIN_DEGREE = self.a_stall
-        self.stall_constraint = self.prototype.ALPHA_STALL_MIN_DEGREE
+        #self.prototype.ALPHA_STALL_MIN_DEGREE = self.a_stall
+        #self.stall_constraint = self.prototype.ALPHA_STALL_MIN_DEGREE
 
     def run_trim(self):
         trimmed = Case(
@@ -225,8 +257,10 @@ class Simulator():
         try:
             self.run_stall()
             print('✅CASO ESTOL CONCLUIDO')
-        except:
+        except Exception as e:
             print('❌FALHA NA SIMULAÇÃO ATÉ O ESTOL')
+            print(f"    ⚠️Erro: {e}")
+            
             self.score = 0
 
         try:

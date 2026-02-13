@@ -150,7 +150,6 @@ class Individual(om.ExplicitComponent):
         dados_tip, msg_tip = definir_perfil(tip_af, inputs['idx_asa_tip'], LISTA_ASA, airfoils_database_asa, "Ponta da Asa")
         print(msg_root)
         print(msg_tip)
-
         # 3. Lógica condicional de carregamento e impressão
         # Inicializamos variáveis vazias/None para evitar erros
         dados_eh = dados_ev = dados_canard = None

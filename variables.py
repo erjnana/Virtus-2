@@ -7,7 +7,7 @@ Aqui estão todos os dados que são necessários serem ajustados antes de rodar 
 # CONFIGURAÇÃO DO PROJETO
 # =========================
 # Opções: "convencional", "canard", "asa_voadora"
-P_CONFIG = "convencional"
+P_CONFIG = "canard"
 
 # =========================
 # IDENTIDADE DO PROJETO
@@ -135,34 +135,34 @@ DEFAULT_VALUES = {
 # =========================
 
 DESIGN_VARIABLES = {
-    'w_bt':     {'lower': 1.5,  'upper': 2.5},
+    'w_bt':     {'lower': 1.5,  'upper': 2.8},
     'w_baf':    {'lower': 0.7, 'upper': 0.9},
     'w_cr':     {'lower': 0.25, 'upper': 0.70},
-    'w_ci':     {'lower': 0.60, 'upper': 0.85},
+    'w_ci':     {'lower': 0.60, 'upper': 0.90},
     'w_ct':     {'lower': 0.5, 'upper': 0.8},
     'w_z':      {'lower': 0.15, 'upper': 0.3},
     'w_inc':    {'lower': -3,  'upper': 3},
-    'w_wo':     {'lower': -5,  'upper': 5},
-    'w_d':      {'lower': -2,  'upper': 3},
+    'w_wo':     {'lower': -5,  'upper': 2},
+    'w_d':      {'lower': 0,  'upper': 3},
 
-    'eh_b':     {'lower': 0.5,  'upper': 1.3},
+    'eh_b':     {'lower': 0.5,  'upper': 1.0},
     'eh_cr':    {'lower': 0.15, 'upper': 0.40},
-    'eh_ct':    {'lower': 0.7, 'upper': 0.95},
+    'eh_ct':    {'lower': 0.7, 'upper': 1.0},
     'eh_inc':   {'lower': -3,  'upper': 3},
 
-    'eh_x':     {'lower': 0.01, 'upper': 1.0},
-    'eh_z':     {'lower': 0.01, 'upper': 1.0},
+    'eh_x':     {'lower': 0.50, 'upper': 1.3},
+    'eh_z':     {'lower': 0.01, 'upper': 0.6},
 
-    'ev_b':     {'lower': 0.3, 'upper': 0.60},
+    'ev_b':     {'lower': 0.3, 'upper': 0.5},
     'ev_ct':    {'lower': 0.7, 'upper': 0.95},
 
-    'motor_x':  {'lower': -0.4, 'upper': -0.15},
+    'motor_x':  {'lower': -0.6, 'upper': -0.30},
 
-    'cn_b': {'lower': 0.3, 'upper': 1.3},
-    'cn_cr': {'lower': 0.15, 'upper': 0.25},
+    'cn_b': {'lower': 0.5, 'upper': 1.3},
+    'cn_cr': {'lower': 0.15, 'upper': 0.35},
     'cn_ct': {'lower': 0.3, 'upper': 1.0},
     'cn_inc': {'lower': 0.0, 'upper': 6.0},
-    'cn_x': {'lower': -0.6, 'upper': -0.25},
+    'cn_x': {'lower': -0.5, 'upper': -0.20},
     'cn_d': {'lower': -2.0, 'upper': 10.0},
-    'cn_z': {'lower': 0.05, 'upper': 0.7},
+    'cn_z': {'lower': 0.05, 'upper': 0.4},
 }

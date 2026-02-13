@@ -7,13 +7,13 @@ proc_case=[]
 if (np > 1):
     for p in range(np):
 
-        crp= om.CaseReader('./log/evolutions/banana_canard_2026_02_11_2301.db'+str(p))
+        crp= om.CaseReader('./log/evolutions/banana_convencional_2026_02_12_1646.db'+str(p))
         driver_cases = crp.list_cases('driver')
         cases = crp.get_cases()
         proc_case.append(cases)
 
 else:
-    crp= om.CaseReader('./log/evolutions/banana_canard_2026_02_11_2301.db')
+    crp= om.CaseReader('./log/evolutions/banana_convencional_2026_02_12_1646.db')
     driver_cases = crp.list_cases('driver')
     cases = crp.get_cases()
     proc_case.append(cases)

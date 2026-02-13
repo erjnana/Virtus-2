@@ -303,12 +303,12 @@ class Prototype:
                                     airfoil=FileAirfoil(self.root_af["dat_path"])
                                     )
         
-        self.w_trans_section = Section(leading_edge_point=Point((w_cr-w_ci)/4, self.w_baf, w_z + z_d(self.w_baf,w_d)),
+        self.w_trans_section = Section(leading_edge_point=Point((w_cr-w_ci)/4, self.w_baf/2, w_z + z_d(self.w_baf/2,w_d)),
                                     chord=w_ci,
                                     airfoil=FileAirfoil(self.root_af["dat_path"])
                                     )
         
-        self.w_tip_section = Section(leading_edge_point=Point(((w_cr-w_ci)/4) + ((w_ci-w_ct)/4) , self.w_bt, w_z + z_d(self.w_bt,w_d)), #necessário incluir função para transformar o ângulo do diedro em altura do perfil
+        self.w_tip_section = Section(leading_edge_point=Point(((w_cr-w_ci)/4) + ((w_ci-w_ct)/4) , self.w_bt/2, w_z + z_d(self.w_bt/2,w_d)), #necessário incluir função para transformar o ângulo do diedro em altura do perfil
                                     chord=w_ct,
                                     airfoil=FileAirfoil(self.tip_af["dat_path"]),
                                     angle= self.w_wo
@@ -339,7 +339,7 @@ class Prototype:
                                         controls= [self.elevator]
                                         )
         
-        self.eh_tip_section = Section(leading_edge_point=Point(eh_x + (eh_cr-eh_ct)/4, self.eh_b, eh_z),
+        self.eh_tip_section = Section(leading_edge_point=Point(eh_x + (eh_cr-eh_ct)/4, self.eh_b/2, eh_z),
                                         chord=eh_ct,
                                         airfoil= FileAirfoil(self.eh_af["dat_path"]),
                                         controls= [self.elevator]

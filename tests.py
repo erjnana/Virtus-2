@@ -93,37 +93,81 @@ Este arquivo contém alguns testes que foram úteis para debugging durante o des
 # simulation1.print_coeffs()
 
 # Selecionar um perfil de cada categoria para usar nos testes
-if airfoils_database_asa:
-    af_root = list(airfoils_database_asa.values())[0]
-    af_tip = list(airfoils_database_asa.values())[0]
-else:
-    raise ValueError("Nenhum perfil de asa foi carregado")
+# if airfoils_database_asa:
+#     af_root = list(airfoils_database_asa.values())[0]
+#     af_tip = list(airfoils_database_asa.values())[0]
+# else:
+#     raise ValueError("Nenhum perfil de asa foi carregado")
 
-if airfoils_database_eh:
-    af_eh = list(airfoils_database_eh.values())[0]
-else:
-    raise ValueError("Nenhum perfil de EH foi carregado")
+# if airfoils_database_eh:
+#     af_eh = list(airfoils_database_eh.values())[0]
+# else:
+#     raise ValueError("Nenhum perfil de EH foi carregado")
 
-if airfoils_database_ev:
-    af_ev = list(airfoils_database_ev.values())[0]
-else:
-    raise ValueError("Nenhum perfil de EV foi carregado")
+# if airfoils_database_ev:
+#     af_ev = list(airfoils_database_ev.values())[0]
+# else:
+#     raise ValueError("Nenhum perfil de EV foi carregado")
 
-aviao2= Prototype( w_bt= 3.2321286257332065, w_baf= 0.9, w_cr= 0.45, w_ci= 0.8547042296684797, w_ct= 0.8, w_z= 0.18, w_inc= -0.3960870755918585, w_wo= 0.0, w_d= 2.1132179687299235, eh_b= 0.6197954432211882, eh_cr= 0.24309488336263088, eh_ct= 0.8, eh_inc= -2.0, ev_b= 0.4, ev_ct= 0.7900185499329802, eh_x= 1.3699514929079597, eh_z= 0.3, motor_x= -0.4, ge= False, af_root_data=af_root, af_tip_data=af_tip, af_eh_data=af_eh, af_ev_data=af_ev)
-aviao2_ge= Prototype( w_bt= 3.2321286257332065, w_baf= 0.9, w_cr= 0.45, w_ci= 0.8547042296684797, w_ct= 0.8, w_z= 0.18, w_inc= -0.3960870755918585, w_wo= 0.0, w_d= 2.1132179687299235, eh_b= 0.6197954432211882, eh_cr= 0.24309488336263088, eh_ct= 0.8, eh_inc= -2.0, ev_b= 0.4, ev_ct= 0.7900185499329802, eh_x= 1.3699514929079597, eh_z= 0.3, motor_x= -0.4, ge= True, af_root_data=af_root, af_tip_data=af_tip, af_eh_data=af_eh, af_ev_data=af_ev)
+root_af = 'MIN1112'
+tip_af = 'eppler421'       
+eh_af = 'NACA0012'
+ev_af = 'NACA0012'
+cn_af = 'NACA0012'
+
+dados_root = {'name': 'MIN1112', 'cl_max': 2.39, 'alpha_cl_max': 12.0, 'dat_path': 'airfoils\\assymmetric\\MIN1112\\geometry.dat'}
+dados_tip = {'name': 'eppler421', 'cl_max': 1.8, 'alpha_cl_max': 11.0, 'dat_path': 'airfoils\\assymmetric\\eppler421\\geometry.dat'}
+dados_eh = {'name': 'NACA0012', 'cl_max': 1.2, 'alpha_cl_max': 15.0, 'dat_path': 'airfoils\\symmetric\\NACA0012\\geometry.dat'}
+dados_ev = {'name': 'NACA0012', 'cl_max': 1.2, 'alpha_cl_max': 15.0, 'dat_path': 'airfoils\\symmetric\\NACA0012\\geometry.dat'}
+dados_canard = {'name': 'NACA0012', 'cl_max': 1.2, 'alpha_cl_max': 15.0, 'dat_path': 'airfoils\\symmetric\\NACA0012\\geometry.dat'}
+
+aviao2= Prototype( af_root_data=dados_root,
+        af_tip_data=dados_tip,
+        af_eh_data=dados_eh,
+        af_ev_data=dados_ev,
+        af_canard_data=dados_canard,cn_b = 1.2, cn_cr = 0.15, cn_ct = 0.9, cn_inc = 0.0, cn_x = -0.5, cn_d = 4.0, cn_z = 0.0, w_bt= 2.274771763125795, w_baf= 0.9, w_cr= 0.46835090245141264, w_ci= 0.776990228187889, w_ct= 0.6638203815384615, w_z= 0.15, w_inc= 2.9744171469230767, w_wo= 1.0977240731062243, w_d= 0.0, eh_b= 0.75, eh_cr= 0.33214639133338325, eh_ct= 0.7, eh_inc= -3.0, ev_b= 0.4, ev_ct= 0.9201353525600001, eh_x= 1.0, eh_z= 0.50, motor_x= -0.15129635916666673,)
+
+# ('cn_b': array([1.14615385]),
+#  'cn_cr': array([0.19358974]),
+#  'cn_ct': array([0.79358974]),
+#  'cn_d': array([9.53846154]),
+#  'cn_inc': array([3.92307692]),
+#  'cn_x': array([-0.38846154]),
+#  'cn_z': array([0.06346154]),
+#  'eh_b': array([0.99358974]),
+#  'eh_cr': array([0.19166667]),
+#  'eh_ct': array([0.85769231]),
+#  'eh_inc': array([-0.15384615]),
+#  'eh_x': array([0.75641026]),
+#  'eh_z': array([0.5924359]),
+#  'ev_b': array([0.31794872]),
+#  'ev_ct': array([0.86346154]),
+#  'motor_x': array([-0.41153846]),
+#  'w_baf': array([0.81025641]),
+#  'w_bt': array([1.75]),
+#  'w_ci': array([0.83461538]),
+#  'w_cr': array([0.38269231]),
+#  'w_ct': array([0.75]),
+#  'w_d': array([2.11538462]),
+#  'w_inc': array([-0.61538462]),
+# w_wo=-4.91025641,
+# w_z = 0.29038462)
+
+
+aviao2.show_geometry() # Teste para verificar se a geometria está sendo criada corretamente
 aviao2.print_geometry_info()
-simulation2= Simulator(aviao2,aviao2_ge)
+simulation2= Simulator(aviao2)
 simulation2.run_a()
 simulation2.scorer()
 simulation2.print_coeffs()
 
-a0 = Case(name='a0', alpha=30, X_cg= aviao2.x_cg, Z_cg= aviao2.z_cg)
+# a0 = Case(name='a0', alpha=30, X_cg= aviao2.x_cg, Z_cg= aviao2.z_cg)
 
-session=Session(geometry=aviao2.geometry,cases=[a0])
+# session=Session(geometry=aviao2.geometry,cases=[a0])
 
-session._run_analysis
+# session._run_analysis
 
-results= session.get_results()
+# results= session.get_results()
 
-with open('./out.json', 'w') as f:
-        f.write(json.dumps(results))
+# with open('./out.json', 'w') as f:
+#         f.write(json.dumps(results))
