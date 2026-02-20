@@ -300,8 +300,9 @@ class Prototype:
         # ====================================================
         self.w_root_section = Section(leading_edge_point=Point(0, 0, w_z),
                                     chord=w_cr,
-                                    airfoil=FileAirfoil(self.root_af["dat_path"])
-                                    )
+                                    airfoil=FileAirfoil(self.root_af["dat_path"]),
+                                    angle= self.w_inc
+)
         
         self.w_trans_section = Section(leading_edge_point=Point((w_cr-w_ci)/4, self.w_baf/2, w_z + z_d(self.w_baf/2,w_d)),
                                     chord=w_ci,
@@ -311,7 +312,7 @@ class Prototype:
         self.w_tip_section = Section(leading_edge_point=Point(((w_cr-w_ci)/4) + ((w_ci-w_ct)/4) , self.w_bt/2, w_z + z_d(self.w_bt/2,w_d)), #necessário incluir função para transformar o ângulo do diedro em altura do perfil
                                     chord=w_ct,
                                     airfoil=FileAirfoil(self.tip_af["dat_path"]),
-                                    angle= self.w_wo
+                                    angle= self.w_wo + self.w_inc
                                     )
 
         self.wing_surface = Surface(name="Wing",
@@ -321,8 +322,11 @@ class Prototype:
                                     span_spacing=Spacing.neg_sine,
                                     y_duplicate=0.0,
                                     sections=[self.w_root_section,self.w_trans_section, self.w_tip_section],
-                                    angle= self.w_inc
                                     )
+        
+        print(f"DEBUG GEOMETRIA:")
+        print(f"Ângulo Raiz: {self.w_root_section.angle} graus")
+        print(f"Ângulo Ponta: {self.w_tip_section.angle} graus")
 
         # ====================================================
         # SEÇÕES – EMPENAGEM

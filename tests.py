@@ -109,23 +109,29 @@ Este arquivo contém alguns testes que foram úteis para debugging durante o des
 # else:
 #     raise ValueError("Nenhum perfil de EV foi carregado")
 
-root_af = 'MIN1112'
-tip_af = 'eppler421'       
+# root_af = 'eppler421'
+# tip_af = 'mh113'       
+root_af = 'NACA0012'
+tip_af = 'NACA0012' 
 eh_af = 'NACA0012'
 ev_af = 'NACA0012'
 cn_af = 'NACA0012'
 
-dados_root = {'name': 'MIN1112', 'cl_max': 2.39, 'alpha_cl_max': 12.0, 'dat_path': 'airfoils\\assymmetric\\MIN1112\\geometry.dat'}
-dados_tip = {'name': 'eppler421', 'cl_max': 1.8, 'alpha_cl_max': 11.0, 'dat_path': 'airfoils\\assymmetric\\eppler421\\geometry.dat'}
+# dados_root = {'name': 'eppler421', 'cl_max': 1.93, 'alpha_cl_max': 6.17, 'dat_path': 'airfoils\\assymmetric\\eppler421\\geometry.dat'}
+# dados_tip = {'name': 'mh113', 'cl_max': 1.79, 'alpha_cl_max': 6.20, 'dat_path': 'airfoils\\assymmetric\\mh113\\geometry.dat'}
+dados_root = {'name': 'NACA0012', 'cl_max': 1.93, 'alpha_cl_max': 6.17, 'dat_path': 'airfoils\\symmetric\\NACA0012\\geometry.dat'}
+dados_tip = {'name': 'NACA0012', 'cl_max': 1.79, 'alpha_cl_max': 6.20, 'dat_path': 'airfoils\\symmetric\\NACA0012\\geometry.dat'}
 dados_eh = {'name': 'NACA0012', 'cl_max': 1.2, 'alpha_cl_max': 15.0, 'dat_path': 'airfoils\\symmetric\\NACA0012\\geometry.dat'}
 dados_ev = {'name': 'NACA0012', 'cl_max': 1.2, 'alpha_cl_max': 15.0, 'dat_path': 'airfoils\\symmetric\\NACA0012\\geometry.dat'}
 dados_canard = {'name': 'NACA0012', 'cl_max': 1.2, 'alpha_cl_max': 15.0, 'dat_path': 'airfoils\\symmetric\\NACA0012\\geometry.dat'}
+
+P_CONFIG = "convencional"
 
 aviao2= Prototype( af_root_data=dados_root,
         af_tip_data=dados_tip,
         af_eh_data=dados_eh,
         af_ev_data=dados_ev,
-        af_canard_data=dados_canard,cn_b = 1.2, cn_cr = 0.15, cn_ct = 0.9, cn_inc = 0.0, cn_x = -0.5, cn_d = 4.0, cn_z = 0.0, w_bt= 2.274771763125795, w_baf= 0.9, w_cr= 0.46835090245141264, w_ci= 0.776990228187889, w_ct= 0.6638203815384615, w_z= 0.15, w_inc= 2.9744171469230767, w_wo= 1.0977240731062243, w_d= 0.0, eh_b= 0.75, eh_cr= 0.33214639133338325, eh_ct= 0.7, eh_inc= -3.0, ev_b= 0.4, ev_ct= 0.9201353525600001, eh_x= 1.0, eh_z= 0.50, motor_x= -0.15129635916666673,)
+        af_canard_data=dados_canard,cn_b = 1.2, cn_cr = 0.15, cn_ct = 0.9, cn_inc = 0.0, cn_x = -0.5, cn_d = 4.0, cn_z = 0.0, w_bt= 2.274771763125795, w_baf= 0.9, w_cr= 0.46835090245141264, w_ci= 0.776990228187889, w_ct= 0.6638203815384615, w_z= 0.15, w_inc= 2.9744171469230767, w_wo= 10.0977240731062243, w_d= 0.0, eh_b= 0.75, eh_cr= 0.33214639133338325, eh_ct= 0.7, eh_inc= -3.0, ev_b= 0.4, ev_ct= 0.9201353525600001, eh_x= 1.0, eh_z= 0.50, motor_x= -0.15129635916666673,)
 
 # ('cn_b': array([1.14615385]),
 #  'cn_cr': array([0.19358974]),
@@ -158,6 +164,7 @@ aviao2.show_geometry() # Teste para verificar se a geometria está sendo criada 
 aviao2.print_geometry_info()
 simulation2= Simulator(aviao2)
 simulation2.run_a()
+simulation2.run_stall()
 simulation2.scorer()
 simulation2.print_coeffs()
 

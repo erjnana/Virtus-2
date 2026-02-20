@@ -44,56 +44,131 @@ class Simulator():
     ###########################################################################
     # MÉTODOS DE CHECAGEM DE ESTOL
     ###########################################################################
+    # def check_stall(self, results):
+    #     limits = {
+    #         'Wing': [self.prototype.af_root_data['cl_max'] if hasattr(self.prototype, 'af_root_data') else 1.2, self.prototype.w_bt],
+    #         'Eh': [self.prototype.af_eh_data['cl_max'] if hasattr(self.prototype, 'af_eh_data') else 1.2, self.prototype.eh_b],
+    #         'Canard': [self.prototype.af_canard_data['cl_max'] if hasattr(self.prototype, 'af_canard_data') else 1.2, self.prototype.cn_b]
+    #     }
+
+    #     for surf_name, (cl_limit, max_span) in limits.items():
+    #         for surf_name in results['a']['StripForces']:
+
+    #             if surf_name == 'Wing':
+    #                 stall= False
+    #                 b_stall=0
+    #                 for panel_n in range(int(len(results['a']['StripForces']['Wing']['Yle'])/2),0,-1):
+
+    #                     if results['a']['StripForces']['Wing']['Yle'][panel_n] >= self.prototype.w_baf/2:
+    #                         af_len= (self.prototype.w_bt - self.prototype.w_baf)/2
+    #                         af_len_perc= (results['a']['StripForces']['Wing']['Yle'][panel_n] - (self.prototype.w_baf/2))/af_len
+    #                         print('af_len_perc:', af_len_perc)
+    #                         clmax= (af_len_perc)*self.prototype.w_tip_clmax + (1-af_len_perc)*self.prototype.w_root_clmax           # Interpolando os clmáx na região afilada
+    #                         if results['a']['StripForces']['Wing']['cl'][panel_n] >= clmax:
+    #                             print ('results:', results['a']['StripForces']['Wing']['cl'][panel_n], 'clmax:', clmax)
+    #                             stall= True
+    #                             b_stall= results['a']['StripForces']['Wing']['Yle'][panel_n] / (self.prototype.w_bt/2) #b_stall é o ponto de estol em % da envergadura
+    #                             print ('b_stall:', b_stall)
+    #                             perc_stall = b_stall * 100
+    #                             print ('perc_stall:', perc_stall)
+    #                             return stall, surf_name, perc_stall
+
+    #                         else:
+    #                             stall= False
+                        
+    #                     else:
+    #                     #if results['a']['StripForces']['Wing']['Yle'][panel_n] <= self.prototype.w_baf/2:
+    #                         clmax= self.prototype.w_root_clmax
+    #                         if results['a']['StripForces']['Wing']['cl'][panel_n] >= clmax:
+    #                             print ('results:', results['a']['StripForces']['Wing']['cl'][panel_n], 'clmax:', clmax)
+    #                             stall= True
+    #                             b_stall= results['a']['StripForces']['Wing']['Yle'][panel_n] / (self.prototype.w_bt/2) #b_stall é o ponto de estol em % da envergadura
+    #                             print ('b_stall:', b_stall)
+    #                             perc_stall = b_stall * 100
+    #                             print ('perc_stall:', perc_stall)
+    #                             return stall, surf_name, perc_stall
+
+    #                         else:
+    #                             stall= False
+                
+    #             else:
+    #                 cls = results['a']['StripForces'][surf_name]['cl']
+    #                 max_cl_3d = max(cls)
+    #                 if max_cl_3d >= cl_limit:
+    #                     # Encontra a posição y do estol para o print do run_a
+    #                     idx = np.argmax(cls)
+    #                     y_stall = results['a']['StripForces'][surf_name]['Yle'][idx]
+    #                     perc_stall = (y_stall / (max_span/2)) * 100
+    #                     return True, surf_name, perc_stall 
+
+    #     return False, 0.0, 0.0
+
     def check_stall(self, results):
+        surfaces_to_check = results['a']['StripForces']
+        
         limits = {
-            'Wing': [self.prototype.af_root_data['cl_max'] if hasattr(self.prototype, 'af_root_data') else 1.2, self.prototype.w_bt],
-            'Eh': [self.prototype.af_eh_data['cl_max'] if hasattr(self.prototype, 'af_eh_data') else 1.2, self.prototype.eh_b],
-            'Canard': [self.prototype.af_canard_data['cl_max'] if hasattr(self.prototype, 'af_canard_data') else 1.2, self.prototype.cn_b]
+            'Wing': {
+                'cl_limit': self.prototype.af_root_data['cl_max'] if hasattr(self.prototype, 'af_root_data') else 1.2,
+                'span': self.prototype.w_bt
+            },
+            'Eh': {
+                'cl_limit': self.prototype.af_eh_data['cl_max'] if hasattr(self.prototype, 'af_eh_data') else 1.2,
+                'span': self.prototype.eh_b
+            },
+            # 'Canard': {
+            #     'cl_limit': self.prototype.af_canard_data['cl_max'] if hasattr(self.prototype, 'af_canard_data') else 1.2,
+            #     'span': self.prototype.cn_b
+            # }
         }
 
-        for surf_name, (cl_limit, max_span) in limits.items():
-            for surf_name in results['a']['StripForces']:
-
-                if surf_name == 'Wing':
-                    stall= False
-                    b_stall=0
-                    for panel_n in range(int(len(results['a']['StripForces']['Wing']['Yle'])/2)):
-                        if results['a']['StripForces']['Wing']['Yle'][panel_n] <= self.prototype.w_baf/2:
-                            clmax= self.prototype.w_root_clmax
-                            if results['a']['StripForces']['Wing']['cl'][panel_n] >= clmax:
-                                stall= True
-                                b_stall= results['a']['StripForces']['Wing']['Yle'][panel_n] / (self.prototype.w_bt/2) #b_stall é o ponto de estol em % da envergadur
-                                return True, surf_name, b_stall
-
-                            else:
-                                stall= False
-
-                        else:
-                            af_len= (self.prototype.w_bt - self.prototype.w_baf)/2
-                            af_len_perc= (results['a']['StripForces']['Wing']['Yle'][panel_n] - (self.prototype.w_baf/2))/af_len
-                            clmax= (af_len_perc)*self.prototype.w_tip_clmax + (1-af_len_perc)*self.prototype.w_root_clmax           # Interpolando os clmáx na região afilada
-                            if results['a']['StripForces']['Wing']['cl'][panel_n] >= clmax:
-                                stall= True
-                                b_stall= results['a']['StripForces']['Wing']['Yle'][panel_n] / (self.prototype.w_bt/2) #b_stall é o ponto de estol em % da envergadura
-                                
-                                return True, surf_name, b_stall
-
-                            else:
-                                stall= False
-
-                    #return True, surf_name, b_stall
+        for surf_name, data in surfaces_to_check.items():
+            if surf_name not in limits:
+                continue
                 
-                else:
-                    cls = results['a']['StripForces'][surf_name]['cl']
-                    max_cl_3d = max(cls)
-                    if max_cl_3d >= cl_limit:
-                        # Encontra a posição y do estol para o print do run_a
-                        idx = np.argmax(cls)
-                        y_stall = results['a']['StripForces'][surf_name]['Yle'][idx]
-                        perc_stall = (y_stall / (max_span/2)) * 100
-                        return True, surf_name, perc_stall 
+            print(f"\n--- Verificando Estol: {surf_name} ---")
+            print(f"{'Painel':<8} | {'Y Pos':<10} | {'CL local':<10} | {'CL Max':<10} | {'Status'}")
+            print("-" * 55)
 
-        return False, 0.0, 0.0
+            cl_list = data['cl']
+            yle_list = data['Yle']
+
+            if surf_name == 'Wing':
+                # Loop da ponta para a raiz (semi-asa esquerda/central)
+                for panel_n in range(int(len(yle_list)/2)-1, -1, -1):
+                    y_pos = yle_list[panel_n]
+                    
+                    # Lógica de interpolação do Clmax
+                    if abs(y_pos) >= self.prototype.w_baf/2:
+                        af_len = (self.prototype.w_bt - self.prototype.w_baf) / 2
+                        af_len_perc = (abs(y_pos) - (self.prototype.w_baf/2)) / af_len
+                        current_clmax = (af_len_perc * self.prototype.w_tip_clmax + 
+                                        (1 - af_len_perc) * self.prototype.w_root_clmax)
+                    else:
+                        current_clmax = self.prototype.w_root_clmax
+
+                    cl_local = cl_list[panel_n]
+                    is_stalled = "ESTOL!!" if cl_local >= current_clmax else "OK"
+                    
+                    print(f"{panel_n:<8} | {y_pos:<10.4f} | {cl_local:<10.4f} | {current_clmax:<10.4f} | {is_stalled}")
+
+                    if cl_local >= current_clmax:
+                        perc_stall = (abs(y_pos) / (self.prototype.w_bt/2)) * 100
+                        return True, surf_name, perc_stall
+
+            else:
+                # Para Eh e Canard (limite constante)
+                cl_limit = limits[surf_name]['cl_limit']
+                max_span = limits[surf_name]['span']
+                
+                for i, (cl_local, y_pos) in enumerate(zip(cl_list, yle_list)):
+                    is_stalled = "ESTOL!!" if cl_local >= cl_limit else "OK"
+                    print(f"{i:<8} | {y_pos:<10.4f} | {cl_local:<10.4f} | {cl_limit:<10.4f} | {is_stalled}")
+                    
+                    if cl_local >= cl_limit:
+                        perc_stall = (abs(y_pos) / (max_span/2)) * 100
+                        return True, surf_name, perc_stall
+
+        return False, None, 0.0
 
     ###########################################################################
     # MÉTODOS DE SIMULAÇÃO
@@ -114,7 +189,7 @@ class Simulator():
         self.last_results = a_results
 
         try:
-            stall, surf_stall, b_stall = self.check_stall(a_results) # <--- Recebe o b_stall
+            stall, surf_stall, perc_stall = self.check_stall(a_results)
             if not stall:
                 self.deflex[a] = a_results['a']['Totals']['elevator']
                 self.cl[a] = a_results['a']['Totals']['CLtot']
@@ -127,8 +202,8 @@ class Simulator():
                 raise RuntimeError(f"\nEstol detectado em alfa={a}")
             return a_results
         except Exception as e:
-            stall, surf_stall, b_stall = self.check_stall(a_results)
-            print(f'    ⚠️Estol em {surf_stall} na posição {b_stall:.1f}% da envergadura')
+            stall, surf_stall, perc_stall = self.check_stall(a_results)
+            print(f'    ⚠️Estol em {surf_stall} na posição {perc_stall:.2f}% da envergadura')
             raise e
 
     def run_ge(self):
@@ -282,7 +357,7 @@ class Simulator():
             self.cp = self.mtow - self.prototype.pv
             self.score = self.cp
         except Exception as e:
-            print('FALHA NA SIMULAÇÃO DE MTOW')
+            print('❌FALHA NA SIMULAÇÃO DE MTOW')
             print(f"    ⚠️Erro: {e}")
             self.score = 0
             self.cp = 0
@@ -314,46 +389,4 @@ class Simulator():
         self.print_coeffs()
 
         return self.score, self.competition_score
-
-    ###########################################################################
-    # MÉTODO PARA PRINTAR COEFICIENTES E INFO
-    ###########################################################################
-    # def print_coeffs(self):
-    #     aero_coeffs = pd.DataFrame(
-    #         [self.cl, self.cd, self.cm, self.deflex],
-    #         index=['CL', 'CD', 'CM', 'Prof']
-    #     ).T
-
-    #     print('--------------OUTPUTS-----------------\n')
-    #     print('--------------Aerodinâmica-----------------')
-    #     print('Coeficientes aerodinâmicos:\n', aero_coeffs, sep='')
-    #     print('CL em corrida=', self.cl_ge.get(0, 'N/A'))
-    #     print('CD em corrida=', self.cd_ge.get(0, 'N/A'))
-
-    #     print('\nEnvergadura=', round(self.prototype.w_bt, 3), 'm')
-    #     print('Transição=', round(self.prototype.w_baf / self.prototype.w_bt, 3) * 100, '% da envergadura')
-    #     print('Altura do EH com relação à asa=', round(self.prototype.eh_z_const, 3), 'm')
-    #     print('Área alar=', round(self.prototype.s_ref, 3), 'm^2')
-    #     print('AR=', round(self.prototype.ar, 2))
-    #     print('AR do EH=', round(self.prototype.eh_ar, 2))
-    #     print('M.A.C.=', round(self.prototype.mac, 3), 'm')
-
-    #     print('\n--------------Controle e Estabilidade-----------------')
-    #     print('VHT=', round(self.prototype.vht, 4))
-    #     print('VVT=', round(self.prototype.vvt, 4))
-    #     print('X_CG=', round(self.prototype.x_cg_p, 3), '% da corda da asa')
-    #     print('Z_CG=', round(self.prototype.z_cg, 3), 'm do chão')
-    #     print('CG=', round(self.prototype.low_cg, 3), 'm abaixo da asa')
-    #     print('Ângulo de trimagem=', round(self.a_trim, 2), 'graus')
-    #     print('Margem Estática=', round(self.me, 3))
-
-        # print('--------------Perfis e Estol-----------------')
-        # self.prototype.print_geometry_info()
-
-# if __name__ == '__main__':
-#     banana = Prototype( w_bt= 3.2321286257332065, w_baf= 0.9, w_cr= 0.45, w_ci= 0.8547042296684797, w_ct= 0.8, w_z= 0.18, w_inc= -0.3960870755918585, w_wo= 0.0, w_d= 2.1132179687299235, eh_b= 0.6197954432211882, eh_cr= 0.24309488336263088, eh_ct= 0.8, eh_inc= -2.0, ev_b= 0.4, ev_ct= 0.7900185499329802, eh_x= 1.3699514929079597, eh_z= 0.3, motor_x= -0.4,)
-#     banana_ge = Prototype( w_bt= 3.2321286257332065, w_baf= 0.9, w_cr= 0.45, w_ci= 0.8547042296684797, w_ct= 0.8, w_z= 0.18, w_inc= -0.3960870755918585, w_wo= 0.0, w_d= 2.1132179687299235, eh_b= 0.6197954432211882, eh_cr= 0.24309488336263088, eh_ct= 0.8, eh_inc= -2.0, ev_b= 0.4, ev_ct= 0.7900185499329802, eh_x= 1.3699514929079597, eh_z= 0.3, motor_x= -0.4, ge=True)
-#     banana2= Simulator(banana,banana_ge)
-#     banana2.scorer()
-#     banana2.print_coeffs()
 
