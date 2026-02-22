@@ -44,64 +44,6 @@ class Simulator():
     ###########################################################################
     # MÉTODOS DE CHECAGEM DE ESTOL
     ###########################################################################
-    # def check_stall(self, results):
-    #     limits = {
-    #         'Wing': [self.prototype.af_root_data['cl_max'] if hasattr(self.prototype, 'af_root_data') else 1.2, self.prototype.w_bt],
-    #         'Eh': [self.prototype.af_eh_data['cl_max'] if hasattr(self.prototype, 'af_eh_data') else 1.2, self.prototype.eh_b],
-    #         'Canard': [self.prototype.af_canard_data['cl_max'] if hasattr(self.prototype, 'af_canard_data') else 1.2, self.prototype.cn_b]
-    #     }
-
-    #     for surf_name, (cl_limit, max_span) in limits.items():
-    #         for surf_name in results['a']['StripForces']:
-
-    #             if surf_name == 'Wing':
-    #                 stall= False
-    #                 b_stall=0
-    #                 for panel_n in range(int(len(results['a']['StripForces']['Wing']['Yle'])/2),0,-1):
-
-    #                     if results['a']['StripForces']['Wing']['Yle'][panel_n] >= self.prototype.w_baf/2:
-    #                         af_len= (self.prototype.w_bt - self.prototype.w_baf)/2
-    #                         af_len_perc= (results['a']['StripForces']['Wing']['Yle'][panel_n] - (self.prototype.w_baf/2))/af_len
-    #                         print('af_len_perc:', af_len_perc)
-    #                         clmax= (af_len_perc)*self.prototype.w_tip_clmax + (1-af_len_perc)*self.prototype.w_root_clmax           # Interpolando os clmáx na região afilada
-    #                         if results['a']['StripForces']['Wing']['cl'][panel_n] >= clmax:
-    #                             print ('results:', results['a']['StripForces']['Wing']['cl'][panel_n], 'clmax:', clmax)
-    #                             stall= True
-    #                             b_stall= results['a']['StripForces']['Wing']['Yle'][panel_n] / (self.prototype.w_bt/2) #b_stall é o ponto de estol em % da envergadura
-    #                             print ('b_stall:', b_stall)
-    #                             perc_stall = b_stall * 100
-    #                             print ('perc_stall:', perc_stall)
-    #                             return stall, surf_name, perc_stall
-
-    #                         else:
-    #                             stall= False
-                        
-    #                     else:
-    #                     #if results['a']['StripForces']['Wing']['Yle'][panel_n] <= self.prototype.w_baf/2:
-    #                         clmax= self.prototype.w_root_clmax
-    #                         if results['a']['StripForces']['Wing']['cl'][panel_n] >= clmax:
-    #                             print ('results:', results['a']['StripForces']['Wing']['cl'][panel_n], 'clmax:', clmax)
-    #                             stall= True
-    #                             b_stall= results['a']['StripForces']['Wing']['Yle'][panel_n] / (self.prototype.w_bt/2) #b_stall é o ponto de estol em % da envergadura
-    #                             print ('b_stall:', b_stall)
-    #                             perc_stall = b_stall * 100
-    #                             print ('perc_stall:', perc_stall)
-    #                             return stall, surf_name, perc_stall
-
-    #                         else:
-    #                             stall= False
-                
-    #             else:
-    #                 cls = results['a']['StripForces'][surf_name]['cl']
-    #                 max_cl_3d = max(cls)
-    #                 if max_cl_3d >= cl_limit:
-    #                     # Encontra a posição y do estol para o print do run_a
-    #                     idx = np.argmax(cls)
-    #                     y_stall = results['a']['StripForces'][surf_name]['Yle'][idx]
-    #                     perc_stall = (y_stall / (max_span/2)) * 100
-    #                     return True, surf_name, perc_stall 
-
-    #     return False, 0.0, 0.0
 
     def check_stall(self, results):
         surfaces_to_check = results['a']['StripForces']
@@ -124,10 +66,6 @@ class Simulator():
         for surf_name, data in surfaces_to_check.items():
             if surf_name not in limits:
                 continue
-                
-            print(f"\n--- Verificando Estol: {surf_name} ---")
-            print(f"{'Painel':<8} | {'Y Pos':<10} | {'CL local':<10} | {'CL Max':<10} | {'Status'}")
-            print("-" * 55)
 
             cl_list = data['cl']
             yle_list = data['Yle']
@@ -148,8 +86,6 @@ class Simulator():
 
                     cl_local = cl_list[panel_n]
                     is_stalled = "ESTOL!!" if cl_local >= current_clmax else "OK"
-                    
-                    print(f"{panel_n:<8} | {y_pos:<10.4f} | {cl_local:<10.4f} | {current_clmax:<10.4f} | {is_stalled}")
 
                     if cl_local >= current_clmax:
                         perc_stall = (abs(y_pos) / (self.prototype.w_bt/2)) * 100
@@ -162,7 +98,6 @@ class Simulator():
                 
                 for i, (cl_local, y_pos) in enumerate(zip(cl_list, yle_list)):
                     is_stalled = "ESTOL!!" if cl_local >= cl_limit else "OK"
-                    print(f"{i:<8} | {y_pos:<10.4f} | {cl_local:<10.4f} | {cl_limit:<10.4f} | {is_stalled}")
                     
                     if cl_local >= cl_limit:
                         perc_stall = (abs(y_pos) / (max_span/2)) * 100

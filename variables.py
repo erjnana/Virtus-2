@@ -44,8 +44,8 @@ pot = 600.0  # Potência máxima do motor em W
 # PERFIS DO AVIÃO
 # ============================================================
 
-root_af='eppler421'            # Perfil da raiz da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
-tip_af='mh113'             # Perfil da ponta da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+root_af='random'            # Perfil da raiz da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+tip_af='random'             # Perfil da ponta da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
 eh_af='NACA0012'            # Perfil do EH (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
 ev_af ='NACA0012'           # Perfil do EV (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
 cn_af = 'NACA0012'            # Perfil do canard (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
@@ -105,7 +105,7 @@ DEFAULT_VALUES = {
     'w_ct': 0.75,       #corda da ponta (% da transição)
     'w_z': 0.20,        #altura da asa
     'w_inc': 0.0,       #incidência da asa
-    'w_wo': 5.0,        #washout da asa
+    'w_wo': 0.0,        #washout da asa
     'w_d': 1.0,         #diedro da asa
 
     'eh_b': 0.9,        #envergadura
@@ -141,8 +141,8 @@ DESIGN_VARIABLES = {
     'w_ci':     {'lower': 0.60, 'upper': 0.90},
     'w_ct':     {'lower': 0.5, 'upper': 0.8},
     'w_z':      {'lower': 0.15, 'upper': 0.3},
-    'w_inc':    {'lower': 0,  'upper': 0},
-    'w_wo':     {'lower': 0,  'upper': 10.0},
+    'w_inc':    {'lower': -2.0,  'upper': 3.0},
+    'w_wo':     {'lower': -5.0,  'upper': 7.0},
     'w_d':      {'lower': 0,  'upper': 3},
 
     'eh_b':     {'lower': 0.5,  'upper': 1.0},

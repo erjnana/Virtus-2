@@ -38,9 +38,9 @@ def load_airfoil(name):
         if field not in summary:
             raise KeyError(f"Campo '{field}' ausente no summary do aerofólio '{name}'")
 
-    dat_file = af_dir / "geometry.dat"
-    if not dat_file.exists():
-        raise FileNotFoundError(f"Arquivo geometry.dat não encontrado em '{af_dir}'")
+    dat_file = "af_" + str(name) + ".dat"
+    if not Path(dat_file).exists():
+        raise FileNotFoundError(f"Arquivo {dat_file} não encontrado")
 
     return {
         "cl_max": summary["cl_max"],
@@ -67,6 +67,7 @@ if base_dir.exists() and base_dir.is_dir():
         "symmetric": [airfoils_database_eh, airfoils_database_ev],
         "inverted": [airfoils_database_eh]
     }
+
 
     for subfolder_name, targets in mapping.items():
         subfolder_path = base_dir / subfolder_name
@@ -112,7 +113,3 @@ LISTA_EH  = sorted(list(airfoils_database_eh.keys()))
 LISTA_EV  = sorted(list(airfoils_database_ev.keys()))
 
 print(f"📦 Catálogo carregado: {len(LISTA_ASA)} perfis de asa, {len(LISTA_EH)} de EH, {len(LISTA_EV)} de EV.")
-
-# print(airfoils_database_asa)
-# print(airfoils_database_eh)
-# print(airfoils_database_ev)
