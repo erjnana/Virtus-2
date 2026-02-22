@@ -62,6 +62,7 @@ Todas as restrições da sua aeronave devem ser alteradas no arquivo variables.p
 - Restrições de estabilidade;
 - Configurações de otimização,
 - Etc.
+
 As variáveis estão comentadas para fácil entendimento, você também poderá definir o nome do projeto para melhor identificação na análise dos logs.
 
 Para prosseguir para a execução do programa, dê run no arquivo optimizer.py. No seu terminal, aparecerão informações de carregamentos dos aerofólios e, logo em seguida, a otimização deverá começar a rodar.
@@ -73,11 +74,14 @@ Há também, na mesma pasta, um arquivo de mesmo nome com final .db. Este arquiv
 2. Na segunda parte, altere o nome do arquivo para aquele que você gostaria de visualizar;
 3. Em "cases", pressione "Select all",
 4. Selecionar no X-axis e Y-axis a informação que você gostaria de visualizar.
+
 O viewer.py não atualiza em tempo real. Por isso, toda vez que você quiser atualizar será necessário rodar novamente a segunda parte do código.
 
 Caso você queira adicionar novos aerofólios ao banco de dados para utilizá-los:
 Na pasta ./airfoils, selecione a pasta aonde o perfil que você gostaria de adicionar se enquadra (simétrico, assimétrico ou invertido) e crie uma nova pasta referente ao seu aerofólio. Dentro dessa pasta é necessário que tenham esses itens: o arquivo geometry.dat contendo a geometria e o arquivo info.yaml, sendo esse muito importante que siga o formato esspecífico que os outros já possuem. É fortemente recomendado que você crie uma cópia de algum info.yaml já existente e apenas altere as informações.
+
 No diretório raiz (./), adicione novamente o arquivo .dat do aerofólio, porém, dessa vez, com o nome "af_(nomedoperfil).dat, caso contrário o código não lerá o arquivo.
+
 É EXTREMAMENTE NECESSÁRIO QUE O NOME DO PERFIL NO ARQUIVO .DAT E O NOME DA PASTA NO ./AIRFOILS SEJÁ O MESMO.
 
 PS.: No momento, a configuração de Asa Voadora não está funcionando.
