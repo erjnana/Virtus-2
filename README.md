@@ -1,4 +1,4 @@
-========================================================= DESCRIÇÃO =========================================================
+========================= DESCRIÇÃO =========================
 
 Este repositório contém o projeto do programa de Otimização Multidisciplinar desenvolvido para a equipe Minerva Aerodesign da UFRJ para o projeto de aeronaves destinadas à competição SAE Aerodesign.
 
@@ -30,7 +30,7 @@ Autores:
 Lucas Alves da Rosa (lucas.rosa@poli.ufrj.br)
 Ana Luiza Silva Duarte (als.duarte.20232@poli.ufrj.br)
 
-========================================================= INSTRUÇÕES DE INSTALAÇÃO =========================================================
+========================= INSTRUÇÕES DE INSTALAÇÃO =========================
 
 Neste arquivo se encontram as instruções recomendadas para rodar o programa de otimização. A experiência do usuário pode ser diferente dependendo no que já havia instalado na máquina anteriormente, dependendo do caso, será necessária uma maior investigação.
 
@@ -50,7 +50,7 @@ Agora que já estão instalados os pacotes necessários para o OpenMDAO, é prec
 
 P.S.: Para configurar no Ubuntu, Primeiro instalar o anaconda e fazer o mesmo + > conda install petsc4py
 
-========================================================= INSTRUÇÕES DE USO =========================================================
+========================= INSTRUÇÕES DE USO =========================
 
 Caso seja sua primeira vez rodando o Virtus, é necessário retirar os arquivos de aerofólios (.dat) da pasta ./dats e colocá-los no diretório raiz do programa (./). Caso contrário, o programa não funcionará.
 
