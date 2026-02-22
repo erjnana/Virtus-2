@@ -99,41 +99,39 @@ class Individual(om.ExplicitComponent):
         """
         global primeira_execucao
         # ======= CONVERSÃO DOS INPUTS =======
-        w_bt = float(inputs['w_bt'])
-        w_baf = float(inputs['w_baf'])
-        w_cr = float(inputs['w_cr'])
-        w_ci = float(inputs['w_ci'])
-        w_ct = float(inputs['w_ct'])
-        w_z = float(inputs['w_z'])
-        w_inc = float(inputs['w_inc'])
-        w_wo = float(inputs['w_wo'])
-        w_d = float(inputs['w_d'])
+        w_bt = float(inputs['w_bt'][0])
+        w_baf = float(inputs['w_baf'][0])
+        w_cr = float(inputs['w_cr'][0])
+        w_ci = float(inputs['w_ci'][0])
+        w_ct = float(inputs['w_ct'][0])
+        w_z = float(inputs['w_z'][0])
+        w_inc = float(inputs['w_inc'][0])
+        w_wo = float(inputs['w_wo'][0])
+        w_d = float(inputs['w_d'][0])
 
-        eh_b = float(inputs['eh_b'])
-        eh_cr = float(inputs['eh_cr'])
-        eh_ct = float(inputs['eh_ct'])
-        eh_inc = float(inputs['eh_inc'])
-        eh_x = float(inputs['eh_x'])
-        eh_z = float(inputs['eh_z'])
+        eh_b = float(inputs['eh_b'][0])
+        eh_cr = float(inputs['eh_cr'][0])
+        eh_ct = float(inputs['eh_ct'][0])
+        eh_inc = float(inputs['eh_inc'][0])
+        eh_x = float(inputs['eh_x'][0])
+        eh_z = float(inputs['eh_z'][0])
 
-        ev_b = float(inputs['ev_b'])
-        ev_ct = float(inputs['ev_ct'])
+        ev_b = float(inputs['ev_b'][0])
+        ev_ct = float(inputs['ev_ct'][0])
 
-        cn_b = float(inputs['cn_b'])
-        cn_cr = float(inputs['cn_cr'])
-        cn_ct = float(inputs['cn_ct'])
-        cn_inc = float(inputs['cn_inc'])
-        cn_x = float(inputs['cn_x'])
-        cn_d = float(inputs['cn_d'])
-        cn_z = float(inputs['cn_z'])
+        cn_b = float(inputs['cn_b'][0])
+        cn_cr = float(inputs['cn_cr'][0])
+        cn_ct = float(inputs['cn_ct'][0])
+        cn_inc = float(inputs['cn_inc'][0])
+        cn_x = float(inputs['cn_x'][0])
+        cn_d = float(inputs['cn_d'][0])
+        cn_z = float(inputs['cn_z'][0])
 
-        motor_x = float(inputs['motor_x'])
-
-        motor_x = float(inputs['motor_x'])
+        motor_x = float(inputs['motor_x'][0])
 
         def definir_perfil(instrucao, idx_float, lista, database, label):
             if instrucao.lower() == "random":
-                i = int(round(float(idx_float)))
+                i = int(round(float(idx_float[0])))
                 i = max(0, min(i, len(lista) - 1))
                 chosen_name = lista[i]
                 msg = f"🎲 [OTIMIZANDO] {label}: Selecionado o perfil '{chosen_name}'"
