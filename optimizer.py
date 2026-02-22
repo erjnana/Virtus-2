@@ -65,17 +65,17 @@ prob.driver = om.DifferentialEvolutionDriver()
 prob.driver.options['debug_print'] = ['desvars']
 
 # Tamanho da população
-prob.driver.options['pop_size'] = 40
+prob.driver.options['pop_size'] = OPTIMIZER_POP_SIZE
 
 # Parâmetros de penalização das restrições
-prob.driver.options['penalty_parameter'] = 20.0
-prob.driver.options['penalty_exponent'] = 1.0
+prob.driver.options['penalty_parameter'] = OPTIMIZER_PENALTY_PARAM
+prob.driver.options['penalty_exponent'] = OPTIMIZER_PENALTY_EXP
 
 # Execução paralela (MPI)
 prob.driver.options['run_parallel'] = False
 
 # Número máximo de gerações
-prob.driver.options['max_gen'] = 999
+prob.driver.options['max_gen'] = OPTIMIZER_MAX_GEN
 
 # =========================
 # RECORDER (LOG DA OTIMIZAÇÃO)
@@ -126,10 +126,6 @@ if ev_af.lower() == "random":
 if cn_af.lower() == "random":
     prob.model.add_design_var('individual_scorer.idx_cn', lower=0, upper=len(LISTA_EV)-1)
 
-# Aqui o MDO fica sabendo:
-# - quais variáveis ele pode mexer
-# - quais os limites físicos de cada uma
-# Os limites vêm TODOS do variables.py
 for var_name, bounds in DESIGN_VARIABLES.items():
     prob.model.add_design_var(
         var_name,
@@ -218,14 +214,120 @@ prob.model.add_constraint(
 # SETUP E EXECUÇÃO
 # =========================
 
+# Abre o arquivo de log e redireciona TODA a saída para ele
+original_stdout = sys.stdout
+log_file = open(log_path_txt, 'w', encoding='utf-8')
+sys.stdout = log_file
+
 # Prepara o modelo (checagem de conexões)
 print("\n--- INICIANDO SETUP ---")
 prob.setup()
 
+
+print("\n\n===============================================================================================================================================================")
+print("\n                                             Simulação Realizada em:", datetime.now().strftime("%d/%m/%Y às %H:%M"))
+print("\n===============================================================================================================================================================")
+print(r"""                                        ____   ____.__         __                 ________  
+                                        \   \ /   /|__|_______/  |_ __ __  ______ \_____  \ 
+                                         \   Y   / |  \_  __ \   __\  |  \/  ___/  /  ____/ 
+                                          \     /  |  ||  | \/|  | |  |  /\___ \  /       \ 
+                                           \___/   |__||__|   |__| |____//______/ \________|""",
+      "\n                                             Bem-vindo ao MDO Virtus da Minerva Aerodesign!", 
+      "\n                                                        Ver. 2.0 de 22/02/2026", 
+      "\n                                            Autores: Ana Luiza S. Duarte e Lucas A. da Rosa")
+print("\n===============================================================================================================================================================")
+print("\n                                                ==== Configurações de Indivíduo ====",
+      "\n\n==== Configuração de projeto:", P_CONFIG,
+      "\n\n=== Perfil dos componentes ====\n",
+      "\nPerfil da raiz da asa:", root_af,
+      "\nPerfil da ponta da asa:", tip_af,
+      "\nPerfil do EH:", eh_af,
+      "\nPerfil do EV:", ev_af,
+      "\nPerfil do canard:", cn_af,
+      "\n\n=== Valores iniciais dos parâmetros ====\n",
+      "\n==== Parâmetros da asa:",
+      "\nEnvergadura (w_bt):", DEFAULT_VALUES['w_bt'], "m",
+        "\nRegião de transição (w_baf):", DEFAULT_VALUES['w_baf']*100, "% da envergadura",
+        "\nCorda da raiz (w_cr):", DEFAULT_VALUES['w_cr'], "m",
+        "\nCorda da transição (w_ci):", DEFAULT_VALUES['w_ci']*100, "% da corda da raiz",
+        "\nCorda da ponta (w_ct):", DEFAULT_VALUES['w_ct'], "m",
+        "\nPosição z do centro de massa (w_z):", DEFAULT_VALUES['w_z'], "m",
+        "\nÂngulo de incidência (w_inc):", DEFAULT_VALUES['w_inc'], "°",
+        "\nPosição x do motor (motor_x):", DEFAULT_VALUES['motor_x'], "m",
+        "\n\n==== Parâmetros da empenagem horizontal:",
+        "\nEnvergadura (eh_b):", DEFAULT_VALUES['eh_b'], "m",
+        "\nCorda na raiz (eh_cr):", DEFAULT_VALUES['eh_cr'], "m",
+        "\nCorda na ponta (eh_ct):", DEFAULT_VALUES['eh_ct'], "m",
+        "\nÂngulo de incidência (eh_inc):", DEFAULT_VALUES['eh_inc'], "°",
+        "\nPosição x do EH (eh_x):", DEFAULT_VALUES['eh_x'], "m",
+        "\nPosição z do EH (eh_z):", DEFAULT_VALUES['eh_z'], "m",
+        "\n\n==== Parâmetros da empenagem vertical:",
+        "\nEnvergadura (ev_b):", DEFAULT_VALUES['ev_b'], "m",
+        "\nCorda (ev_ct):", DEFAULT_VALUES['ev_ct'], "m",
+        "\n\n==== Parâmetros do canard:",
+        "\nEnvergadura (cn_b):", DEFAULT_VALUES['cn_b'], "m",
+        "\nCorda na raiz (cn_cr):", DEFAULT_VALUES['cn_cr'], "m",
+        "\nCorda na ponta (cn_ct):", DEFAULT_VALUES['cn_ct'], "m",
+        "\nÂngulo de incidência (cn_inc):", DEFAULT_VALUES['cn_inc'], "°",
+        "\nPosição x do canard (cn_x):", DEFAULT_VALUES['cn_x'], "m",
+        "\nPosição z do canard (cn_z):", DEFAULT_VALUES['cn_z'], "m",
+)
+print ("\n\n=== Limites Mínimos e Máximos de Design ====\n",
+       "\n==== Parâmetros da asa:",
+        "\nEnvergadura (w_bt): mínimo", DESIGN_VARIABLES['w_bt']['lower'], "m - máximo", DESIGN_VARIABLES['w_bt']['upper'], "m",
+        "\nRegião de transição (w_baf): mínimo", DESIGN_VARIABLES['w_baf']['lower']*100, "% - máximo", DESIGN_VARIABLES['w_baf']['upper']*100, "% da envergadura",
+        "\nCorda da raiz (w_cr): mínimo", DESIGN_VARIABLES['w_cr']['lower'], "m - máximo", DESIGN_VARIABLES['w_cr']['upper'], "m",
+        "\nCorda da transição (w_ci): mínimo", DESIGN_VARIABLES['w_ci']['lower']*100, "% - máximo", DESIGN_VARIABLES['w_ci']['upper']*100, "% da corda da raiz",
+        "\nCorda da ponta (w_ct): mínimo", DESIGN_VARIABLES['w_ct']['lower'], "m - máximo", DESIGN_VARIABLES['w_ct']['upper'], "m",
+        "\nPosição z do centro de massa (w_z): mínimo", DESIGN_VARIABLES['w_z']['lower'], "m - máximo", DESIGN_VARIABLES['w_z']['upper'], "m",
+        "\nÂngulo de incidência (w_inc): mínimo", DESIGN_VARIABLES['w_inc']['lower'], "° - máximo", DESIGN_VARIABLES['w_inc']['upper'], "°",
+        "\nPosição x do motor (motor_x): mínimo", DESIGN_VARIABLES['motor_x']['lower'], "m - máximo", DESIGN_VARIABLES['motor_x']['upper'], "m",
+        "\n\n==== Parâmetros da empenagem horizontal:", 
+        "\nEnvergadura (eh_b): mínimo", DESIGN_VARIABLES['eh_b']['lower'], "m - máximo", DESIGN_VARIABLES['eh_b']['upper'], "m", 
+        "\nCorda na raiz (eh_cr): mínimo", DESIGN_VARIABLES['eh_cr']['lower'], "m - máximo", DESIGN_VARIABLES['eh_cr']['upper'], "m",
+        "\nCorda na ponta (eh_ct): mínimo", DESIGN_VARIABLES['eh_ct']['lower'], "m - máximo", DESIGN_VARIABLES['eh_ct']['upper'], "m",
+        "\nÂngulo de incidência (eh_inc): mínimo", DESIGN_VARIABLES['eh_inc']['lower'], "° - máximo", DESIGN_VARIABLES['eh_inc']['upper'], "°",
+        "\nPosição x do EH (eh_x): mínimo", DESIGN_VARIABLES['eh_x']['lower'], "m - máximo", DESIGN_VARIABLES['eh_x']['upper'], "m",
+        "\nPosição z do EH (eh_z): mínimo", DESIGN_VARIABLES['eh_z']['lower'], "m - máximo", DESIGN_VARIABLES['eh_z']['upper'], "m",
+        "\n\n==== Parâmetros da empenagem vertical:",
+        "\nEnvergadura (ev_b): mínimo", DESIGN_VARIABLES['ev_b']['lower'], "m - máximo", DESIGN_VARIABLES['ev_b']['upper'], "m",
+        "\nCorda (ev_ct): mínimo", DESIGN_VARIABLES['ev_ct']['lower'], "m - máximo", DESIGN_VARIABLES['ev_ct']['upper'], "m",
+        "\n\n==== Parâmetros do canard:",
+        "\nEnvergadura (cn_b): mínimo", DESIGN_VARIABLES['cn_b']['lower'], "m - máximo", DESIGN_VARIABLES['cn_b']['upper'], "m",
+        "\nCorda na raiz (cn_cr): mínimo", DESIGN_VARIABLES['cn_cr']['lower'], "m - máximo", DESIGN_VARIABLES['cn_cr']['upper'], "m",
+        "\nCorda na ponta (cn_ct): mínimo", DESIGN_VARIABLES['cn_ct']['lower'], "m - máximo", DESIGN_VARIABLES['cn_ct']['upper'], "m",
+        "\nÂngulo de incidência (cn_inc): mínimo", DESIGN_VARIABLES['cn_inc']['lower'], "° - máximo", DESIGN_VARIABLES['cn_inc']['upper'], "°",
+        "\nPosição x do canard (cn_x): mínimo", DESIGN_VARIABLES['cn_x']['lower'], "m - máximo", DESIGN_VARIABLES['cn_x']['upper'], "m",
+        "\nPosição z do canard (cn_z): mínimo", DESIGN_VARIABLES['cn_z']['lower'], "m - máximo", DESIGN_VARIABLES['cn_z']['upper'], "m",
+       )
+
+print("\n\n=== Restrições de Estabilidade ====\n",
+      "\n==== Estabilidade longitudinal:",
+      "\nVolume de cauda horizontal (vht): mínimo", vht_min, "- máximo", vht_max,
+      "\nCm0: mínimo", cm0_min,
+      "\nCma: máximo", cma_max,
+      "\nÂngulo de trim (a_trim): mínimo", a_trim_min, "° - máximo", a_trim_max, "°",
+      "\nMargem estática (me): mínimo", me_min, "- máximo", me_max,
+      "\n\n==== Estabilidade direcional:",
+      "\nVolume de cauda vertical (vvt): mínimo", vvt_min, "- máximo", vvt_max,
+      "\nCnb: mínimo", cnb_min
+      )
+
+print("\n===============================================================================================================================================================")
+print("\n                                                ==== Configurações do Otimizador ====",
+        "\n\n=== Configurações de otimização:",
+        "\nTamanho da população:", OPTIMIZER_POP_SIZE,
+        "\nNúmero máximo de gerações:", OPTIMIZER_MAX_GEN,
+        "\nParâmetro de penalização das restrições:", OPTIMIZER_PENALTY_PARAM,
+        "\nExpoente de penalização das restrições:", OPTIMIZER_PENALTY_EXP,
+        "\nDriver:", OPTIMIZER_DRIVER
+        )
+print("\n===============================================================================================================================================================")
+
 # Roda o MDO com log em arquivo txt
 print("\n--- SETUP CONCLUÍDO. INICIANDO OTIMIZAÇÃO ---\n")
-original_stdout = sys.stdout
-with open(log_path_txt, 'w', encoding='utf-8') as f:
-    sys.stdout = f
-    prob.run_driver()
+prob.run_driver()
+
+# Restaura stdout e fecha o arquivo de log
 sys.stdout = original_stdout
+log_file.close()

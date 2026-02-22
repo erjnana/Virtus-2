@@ -1,16 +1,8 @@
+from variables import *
+
 '''
 Módulo que inclui todos os cálculos e verificações de estabilidade estática da aeronave para adequação do modelo aos critérios estabelecidos
 '''
-# Restrições:
-# Est. Longitudinal
-vht_min= 0.3; vht_max= 0.6 #alterado
-cm0_min= 0
-cma_max= 0
-a_trim_min= 2; a_trim_max= 6 #mantido
-me_min= 0.05; me_max= 0.15       # Essa margem estática é normalizada com relação à corda da raíz (alterado)
-#Est. Ddirecional
-vvt_min= 0.02; vvt_max=0.05 #alterado
-cnb_min= 0
 
 def check_interval(value,min,max):
 

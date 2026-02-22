@@ -6,14 +6,26 @@ Aqui estão todos os dados que são necessários serem ajustados antes de rodar 
 # =========================
 # CONFIGURAÇÃO DO PROJETO
 # =========================
+
 # Opções: "convencional", "canard", "asa_voadora"
-P_CONFIG = "convencional"
+P_CONFIG = "canard"
 
 # =========================
 # IDENTIDADE DO PROJETO
 # =========================
+
 NAME = "banana"     # Nome do projeto usado em logs, resultados e relatórios
 PROJECT_NAME = f"{NAME}_{P_CONFIG}"
+
+# ============================================================
+# CONFIGURAÇÕES DO OTIMIZADOR
+# ============================================================
+
+OPTIMIZER_POP_SIZE = 40             # Tamanho da população
+OPTIMIZER_MAX_GEN = 999             # Número máximo de gerações
+OPTIMIZER_PENALTY_PARAM = 20.0      # Parâmetro de penalização das restrições
+OPTIMIZER_PENALTY_EXP = 1.0         # Expoente de penalização das restrições
+OPTIMIZER_DRIVER = "Differential Evolution Driver"  # Tipo de driver
 
 # =========================
 # PONTUAÇÃO ESTIMADA
@@ -23,16 +35,6 @@ NR_DEFAULT = 130.00         # Nota de relatório estimada
 PEE_FACTOR = 50             # Fator de pontuação eficiência estrutural
 APRESENTACAO = 32.00        # Nota da apresentação
 VIDEOVOO = 30.0             # Nota do vídeo de voo
-
-if P_CONFIG == "convencional":
-    Nhor_DEFAULT = 2            # Asa + EH
-elif P_CONFIG == "canard":
-    Nhor_DEFAULT = 3            # Asa + Canard + EH
-elif P_CONFIG == "asa_voadora":
-    Nhor_DEFAULT = 1            # Apenas Asa
-else: 
-    Nhor_DEFAULT = 2
-    print("⚠️ Configuração não definida.")
 
 # ============================================================
 # RESTRIÇÕES DE POTENCIA
@@ -48,13 +50,7 @@ root_af='random'            # Perfil da raiz da asa (insira o nome da pasta do p
 tip_af='random'             # Perfil da ponta da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
 eh_af='NACA0012'            # Perfil do EH (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
 ev_af ='NACA0012'           # Perfil do EV (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
-cn_af = 'NACA0012'            # Perfil do canard (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
-
-# ============================================================
-# RESTRIÇÕES AERODINÂMICAS GLOBAIS
-# ============================================================
-
-ALPHA_STALL_MIN_DEG = 13.0      # Ângulo mínimo de estol do AVIÃO COMPLETO [graus]
+cn_af = 'NACA0012'          # Perfil do canard (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
 
 # =========================
 # INPUTS DO INDIVÍDUO
@@ -166,3 +162,32 @@ DESIGN_VARIABLES = {
     'cn_d': {'lower': -2.0, 'upper': 10.0},
     'cn_z': {'lower': 0.05, 'upper': 0.4},
 }
+
+# ============================================================
+# RESTRIÇÕES DE ESTABILIDADE
+# ============================================================
+
+vht_min= 0.3        #Volume de cauda horizontal mínimo
+vht_max= 0.6        #Volume de cauda horizontal máximo
+cm0_min= 0          #Cm0 mínimo
+cma_max= 0          #Cma máximo
+a_trim_min= 2       #Ângulo de trimagem mínimo
+a_trim_max= 6       #Ângulo de trimagem máximo
+me_min= 0.05        #Margem estática mínima (normalizada com relação à corda da raíz)
+me_max= 0.15        #Margem estática máxima (normalizada com relação à corda da raíz)
+
+vvt_min= 0.02       #Volume de cauda vertical mínimo
+vvt_max=0.05        #Volume de cauda vertical máximo
+cnb_min= 0          #Cnb mínimo
+
+# ============================================================
+
+if P_CONFIG == "convencional":
+    Nhor_DEFAULT = 2            # Asa + EH
+elif P_CONFIG == "canard":
+    Nhor_DEFAULT = 3            # Asa + Canard + EH
+elif P_CONFIG == "asa_voadora":
+    Nhor_DEFAULT = 1            # Apenas Asa
+else: 
+    Nhor_DEFAULT = 2
+    print("⚠️ Configuração não definida.")
