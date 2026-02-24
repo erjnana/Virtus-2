@@ -8,7 +8,7 @@ def load_airfoil(name):
     symmetric, assymmetric e inverted.
     """
     base_dir = Path("airfoils")
-    subfolders = ["symmetric", "assymmetric", "inverted"]
+    subfolders = ["symmetric", "assymmetric", "inverted", "reflex"]
     af_dir = None
 
     # Procura em qual subpasta o aerofólio está
@@ -55,6 +55,7 @@ def load_airfoil(name):
 airfoils_database_asa = {} # Apenas assymmetric
 airfoils_database_eh = {}  # symmetric e inverted
 airfoils_database_ev = {}  # Apenas symmetric
+airfoils_database_asavoadora = {}
 
 base_path = "airfoils"
 base_dir = Path(base_path)
@@ -65,7 +66,8 @@ if base_dir.exists() and base_dir.is_dir():
     mapping = {
         "assymmetric": [airfoils_database_asa],
         "symmetric": [airfoils_database_eh, airfoils_database_ev],
-        "inverted": [airfoils_database_eh]
+        "inverted": [airfoils_database_eh], 
+        "reflex": [airfoils_database_asavoadora]
     }
 
 
@@ -111,5 +113,6 @@ def select_airfoil(name_or_random, database, label="Componente"):
 LISTA_ASA = sorted(list(airfoils_database_asa.keys()))
 LISTA_EH  = sorted(list(airfoils_database_eh.keys()))
 LISTA_EV  = sorted(list(airfoils_database_ev.keys()))
+LISTA_ASAVOADORA = sorted(list(airfoils_database_asavoadora.keys()))
 
-print(f"📦 Catálogo carregado: {len(LISTA_ASA)} perfis de asa, {len(LISTA_EH)} de EH, {len(LISTA_EV)} de EV.")
+print(f"📦 Catálogo carregado: {len(LISTA_ASA)} perfis de Asa, {len(LISTA_EH)} de EH, {len(LISTA_EV)} de EV, {len(LISTA_ASAVOADORA)} de Asa Voadora.")

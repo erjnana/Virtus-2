@@ -8,7 +8,7 @@ Aqui estão todos os dados que são necessários serem ajustados antes de rodar 
 # =========================
 
 # Opções: "convencional", "canard", "asa_voadora"
-P_CONFIG = "asa_voadora"
+P_CONFIG = "canard"
 
 # =========================
 # IDENTIDADE DO PROJETO

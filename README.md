@@ -53,6 +53,10 @@ P.S.: Para configurar no Ubuntu, Primeiro instalar o anaconda e fazer o mesmo + 
 
 ========================= INSTRUÇÕES DE USO =========================
 
+Para rodar o Virtus 2, baixe a pasta completa pelo GitHub. Deixe-a em alguma pasta local do seu computador, caso você deixe em alguma pasta online (OneDrive, Google Drive, etc) o programa pode não funcionar.
+
+N console do Anaconda abra o VSCode (sempre abra por dentro do Anaconda). Nas abas superiores selecione File > Open Folder... > pasta do Virtus 2. Agora você deve estar com todos os arquivos do Virtus 2 carregados em seu VSCode.
+
 Caso seja sua primeira vez rodando o Virtus, é necessário retirar os arquivos de aerofólios (.dat) da pasta ./dats e colocá-los no diretório raiz do programa (./). Caso contrário, o programa não funcionará.
 
 Todas as restrições da sua aeronave devem ser alteradas no arquivo variables.py. Nesse arquivo, é possível alterar informações como:
@@ -68,9 +72,14 @@ Todas as restrições da sua aeronave devem ser alteradas no arquivo variables.p
 
 PS.: No momento, a configuração de Asa Voadora não está funcionando.
 
-As variáveis estão comentadas para fácil entendimento, você também poderá definir o nome do projeto para melhor identificação na análise dos logs.
+Atente-se ao fato de que existem secões diferentes para cada tipo de configuracão de aeronave. Cada uma corresponde às variáveis definidas exclusivamente para aquela configuracão. As variáveis estão comentadas para fácil entendimento, você também poderá definir o nome do projeto para melhor identificação na análise dos logs.
 
-Para prosseguir para a execução do programa, dê run no arquivo optimizer.py. No seu terminal, aparecerão informações de carregamentos dos aerofólios e, logo em seguida, a otimização deverá começar a rodar.
+Para prosseguir para a execução do programa, dê run no arquivo optimizer.py. No seu terminal, aparecerão informações de carregamentos dos aerofólios e, logo em seguida, a otimização deverá começar a rodar. 
+
+Eventualmente poderá aparecer alguma mensagem do tipo "⚠️ Erro ao carregar 'nome do perfil': mensagem de erro", isso é normal e significa somente que há alguma informacão faltando para o perfil correspondente, o perfil será desconsiderado e a otimizacão seguirá normalmente.
+
+Mensagens do tipo "  d_sol, d_sol_res= quad(f_d_sol, 0, v_decol, args=(p, t, m, s, clc, clmax, cdc, pot, g, mu), limit= 100)" também poderão aparecer, porém não significam qualquer problema e o programa seguirá normalmente.
+
 
 Na pasta ./log/evolutions você poderá acessar um arquivo .txt referente à otimização. No nome do arquivo está o nome do projeto configurado no variables.py, o tipo de configuração da aeronave e o horário de início de execução para fácil catalogação.
 

@@ -171,13 +171,13 @@ simulation2.run_stall()
 #simulation2.scorer()
 #simulation2.print_coeffs()
 
-# a0 = Case(name='a0', alpha=30, X_cg= aviao2.x_cg, Z_cg= aviao2.z_cg)
+a0 = Case(name='a0', alpha=30, X_cg= aviao2.x_cg, Z_cg= aviao2.z_cg)
 
-# session=Session(geometry=aviao2.geometry,cases=[a0])
+session=Session(geometry=aviao2.geometry,cases=[a0])
 
-# session._run_analysis
+session._run_analysis
 
-# results= session.get_results()
+results= session.get_results()
 
-# with open('./out.json', 'w') as f:
-#         f.write(json.dumps(results))
+with open('./out.json', 'eh') as f:
+         f.write(json.dumps(results))

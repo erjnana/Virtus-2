@@ -1,0 +1,32 @@
+name: eppler186
+family: EPPLER
+
+source:
+  geometry: Airfoil Tools
+  polars: XFOIL
+
+mach: 0.05
+transition_model: free
+
+reynolds_available:
+  - 2.0e5
+  - 3.0e5
+  - 4.0e5
+  - 5.0e5
+
+alpha_range: [-10, 20]
+alpha_step: 0.5
+
+summary:
+  reynolds: 3.0e5
+  alpha_range_linear: [0, 9]   # graus
+  cl_0: 0.1
+  cl_alpha: 5.73               # 1/rad
+  cl_max: 1.012
+  alpha_cl_max: 11.0
+  cm_0: 0.0043
+
+validation:
+  stall_model: trailing-edge stall / moderate
+
+notes: 

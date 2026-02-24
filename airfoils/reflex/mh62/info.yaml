@@ -1,0 +1,32 @@
+name: MH62
+family:
+
+source:
+  geometry: Airfoil Tools
+  polars: XFOIL
+
+mach: 0.05
+transition_model: free
+
+reynolds_available:
+  - 2.0e5
+  - 3.0e5
+  - 4.0e5
+  - 5.0e5
+
+alpha_range: [-10, 20]
+alpha_step: 0.5
+
+summary:
+  reynolds: 3.0e5
+  alpha_range_linear: [0, 10]   # graus
+  cl_0: 0.15
+  cl_alpha: 6.0165               # 1/rad
+  cl_max: 1.132
+  alpha_cl_max: 10.0
+  cm_0: -0.019
+
+validation:
+  stall_model: trailing-edge stall / moderate
+
+notes: 
