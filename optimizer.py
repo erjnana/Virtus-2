@@ -233,8 +233,8 @@ print(r"""                                        ____   ____.__         __     
                                           \     /  |  ||  | \/|  | |  |  /\___ \  /       \ 
                                            \___/   |__||__|   |__| |____//______/ \________|""",
       "\n                                             Bem-vindo ao MDO Virtus da Minerva Aerodesign!", 
-      "\n                                                        Ver. 2.0 de 22/02/2026", 
-      "\n                                            Autores: Ana Luiza S. Duarte e Lucas A. da Rosa")
+      "\n                                                        VVer. 2.0 de 24/02/2026", 
+      "\n                                            Autores: Lucas A. da Rosa e Ana Luiza S. Duarte")
 print("\n===============================================================================================================================================================")
 print("\n                                                ==== Configurações de Indivíduo ====",
       "\n\n==== Configuração de projeto:", P_CONFIG,

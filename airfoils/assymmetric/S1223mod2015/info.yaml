@@ -1,0 +1,32 @@
+name: S1223 mod 2015
+family: Selig (modified)
+
+source:
+  geometry: Minerva Aerodesign
+  polars: XFOIL
+
+mach: 0.05
+transition_model: free
+
+reynolds_available:
+  - 2.0e5
+  - 3.0e5
+  - 4.0e5
+  - 5.0e5
+
+alpha_range: [-10, 20]
+alpha_step: 0.5
+
+summary:
+  reynolds: 3.0e5
+  alpha_range_linear: [-4, 10]   # graus
+  cl_0: 1.21
+  cl_alpha: 5.8              # 1/rad
+  cl_max: 2.4
+  alpha_cl_max: 14.0
+  cm_0: -0.275
+
+validation:
+  stall_model: gentle
+
+notes: >

@@ -37,7 +37,7 @@ Neste arquivo se encontram as instruções recomendadas para rodar o programa de
 Primeiros passos:
 
 1. Instalar o Anaconda, para gerenciar o ambiente virtual e instalar os pacotes;
-2. Dentro do Anaconda, instalar o VSCode, para editar e rodar os códigos (abrir sempre pelo anaconda);
+2. Instalar o VSCode, para editar e rodar os códigos, e verificar se o mesmo aparece no console do Anaconda (sempre abrir pelo Anaconda);
 3. Para configurar o ambiente para rodar o MDO, digite o seguinte comando no terminal do Anaconda:
 
     > pip install openmdao;pip install pyDOE2;pip install mpi4py; pip install ipympl
@@ -47,6 +47,7 @@ Agora que já estão instalados os pacotes necessários para o OpenMDAO, é prec
 1. Faça o download do zip do avlwrapper em https://github.com/jbussemaker/AVLWrapper.git
 2. Coloque a pasta avlwrapper em C:/Users/"Seu_usuario"/anaconda3/Lib/site-packages/
 3. Copie o arquivo avl352.exe contido na pasta do Virtus 2 para dentro da pasta avlwrapper, abra o arquivo config e especifice Executable como avl352.exe.
+        3.1. Se preferir, você também pode baixar diretamente do sita do AVL: https://web.mit.edu/drela/Public/web/avl/
 
 P.S.: Para configurar no Ubuntu, Primeiro instalar o anaconda e fazer o mesmo + > conda install petsc4py
 
@@ -57,11 +58,15 @@ Caso seja sua primeira vez rodando o Virtus, é necessário retirar os arquivos 
 Todas as restrições da sua aeronave devem ser alteradas no arquivo variables.py. Nesse arquivo, é possível alterar informações como:
 - Configuração da aeronave;
 - Fatores de pontuação;
+- Restricões do regulamento;
 - Perfis dos componentes da aeronave;
-- Restrições geométricas;
+- Restrições geométricas para cada tipo de configuracão;
 - Restrições de estabilidade;
-- Configurações de otimização,
+- Configurações de otimização;
+- Requisitos de validacão,
 - Etc.
+
+PS.: No momento, a configuração de Asa Voadora não está funcionando.
 
 As variáveis estão comentadas para fácil entendimento, você também poderá definir o nome do projeto para melhor identificação na análise dos logs.
 
@@ -77,6 +82,11 @@ Há também, na mesma pasta, um arquivo de mesmo nome com final .db. Este arquiv
 
 O viewer.py não atualiza em tempo real. Por isso, toda vez que você quiser atualizar será necessário rodar novamente a segunda parte do código.
 
+O arquivo .db também serve para fazer o processamento final dos indivíduos válidos (dentro dos critérios definidos na sessão REQUISITOS PARA INDIVÍDUOS VÁLIDOS do variables.py). Para isso, abra o arquivo post_processing.py e, na linha 10, insira o nome do arquivo que você gostaria de analisar (com final .db) e rode o arquivo.
+
+Na pasta ./log/post_processing você terá acesso ao arquivo post_(nome do arquivo original).txt com todos os indivíduos da sua otimizacão que se enquadram nos requisitos que estipulou.
+
+
 Caso você queira adicionar novos aerofólios ao banco de dados para utilizá-los:
 Na pasta ./airfoils, selecione a pasta aonde o perfil que você gostaria de adicionar se enquadra (simétrico, assimétrico ou invertido) e crie uma nova pasta referente ao seu aerofólio. Dentro dessa pasta é necessário que tenham esses itens: o arquivo geometry.dat contendo a geometria e o arquivo info.yaml, sendo esse muito importante que siga o formato esspecífico que os outros já possuem. É fortemente recomendado que você crie uma cópia de algum info.yaml já existente e apenas altere as informações.
 
@@ -84,5 +94,4 @@ No diretório raiz (./), adicione novamente o arquivo .dat do aerofólio, porém
 
 É EXTREMAMENTE NECESSÁRIO QUE O NOME DO PERFIL NO ARQUIVO .DAT E O NOME DA PASTA NO ./AIRFOILS SEJÁ O MESMO.
 
-PS.: No momento, a configuração de Asa Voadora não está funcionando.
 

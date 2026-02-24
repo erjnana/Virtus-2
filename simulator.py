@@ -57,10 +57,10 @@ class Simulator():
                 'cl_limit': self.prototype.af_eh_data['cl_max'] if hasattr(self.prototype, 'af_eh_data') else 1.2,
                 'span': self.prototype.eh_b
             },
-            # 'Canard': {
-            #     'cl_limit': self.prototype.af_canard_data['cl_max'] if hasattr(self.prototype, 'af_canard_data') else 1.2,
-            #     'span': self.prototype.cn_b
-            # }
+             'Canard': {
+                 'cl_limit': self.prototype.af_canard_data['cl_max'] if hasattr(self.prototype, 'af_canard_data') else 1.2,
+                 'span': self.prototype.cn_b
+             }
         }
 
         for surf_name, data in surfaces_to_check.items():

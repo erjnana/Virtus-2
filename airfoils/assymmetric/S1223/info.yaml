@@ -1,0 +1,32 @@
+name: S1223
+family: Selig
+
+source:
+  geometry: Airfoil TOols
+  polars: XFOIL
+
+mach: 0.05
+transition_model: free
+
+reynolds_available:
+  - 2.0e5
+  - 3.0e5
+  - 4.0e5
+  - 5.0e5
+
+alpha_range: [-10, 20]
+alpha_step: 0.5
+
+summary:
+  reynolds: 3.0e5
+  alpha_range_linear: [-2, 4]   # graus
+  cl_0: 1.16
+  cl_alpha: 6.12              # 1/rad
+  cl_max: 2.27
+  alpha_cl_max: 14.0
+  cm_0: -0.265
+
+validation:
+  stall_model: gentle
+
+notes: >

@@ -1,0 +1,32 @@
+name: FX 74 cl-5140
+family: Wortmann
+
+source:
+  geometry: Airfoil Tools
+  polars: XFOIL
+
+mach: 0.05
+transition_model: free
+
+reynolds_available:
+  - 2.0e5
+  - 3.0e5
+  - 4.0e5
+  - 5.0e5
+
+alpha_range: [-10, 20]
+alpha_step: 0.5
+
+summary:
+  reynolds: 3.0e5
+  alpha_range_linear: [-2, 8]   # graus
+  cl_0: 1.12
+  cl_alpha: 6.41             # 1/rad
+  cl_max: 2.185
+  alpha_cl_max: 13.0
+  cm_0: -0.228
+
+validation:
+  stall_model: sharp
+
+notes: >
