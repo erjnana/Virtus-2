@@ -4,7 +4,9 @@ Este repositório contém o projeto do programa de Otimização Multidisciplinar
 
 O início do desenvolvimento se deu na fase inicial da competição de 2023, porém com o intuito de servir ao futuro da equipe.
 
-A função do programa é otimizar a geometria de uma aeronave de modo a obter uma maior pontuação e satisfazendo as restrições necessárias. O programa atual está configurado baseado no regulamento de 2026.
+A função do programa é otimizar a geometria de uma aeronave de modo a obter uma maior pontuação e satisfazendo as restrições necessárias. 
+
+Ao final de 2025, se iniciou um movimento de buscas para aperfeiçoamento e atualização do Virtus, englobando novas possibilidades, aumentando a integração com topdas as áreas e com a intenção de aprimorar cada vez mais o programa. Dessa forma, nasceu o Virtus 2. Atualmente, o Virtus 2 passa por atualizações semanais que contam com cada vez mais detalhes. Sua primeira versão oficial foi lançada em 24/02/2026 e o programa atual está configurado baseado no regulamento de 2026.
 
 O programa tem base em 2 pacotes:
 
