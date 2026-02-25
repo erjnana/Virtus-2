@@ -7,7 +7,7 @@ from stability import *
 from variables import *
 
 # 1. Definição do path do input
-db_path = './log/evolutions/banana_convencional_2026_02_24_1208.db' #INSIRA NOME DO ARQUIVO A SER ANALISADO AQUI
+db_path = './log/evolutions/banana_canard_2026_02_24_1831.db' #INSIRA NOME DO ARQUIVO A SER ANALISADO AQUI
 
 # 2. Configuração do Nome do Log: post_(nome_do_arquivo).txt
 db_filename = os.path.basename(db_path)

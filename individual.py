@@ -2,7 +2,7 @@ import openmdao.api as om
 from prototype import Prototype
 from simulator import Simulator
 from variables import *
-from airfoil_loader import *
+from airfoil_loader import (LISTA_ASA, LISTA_EH, LISTA_EV, airfoils_database_asa, airfoils_database_eh, airfoils_database_ev)
 
 class Individual(om.ExplicitComponent):
     """
@@ -55,8 +55,6 @@ class Individual(om.ExplicitComponent):
         # ======= PERFIS  =======
         self.add_input('idx_asa_root', val=0.0)
         self.add_input('idx_asa_tip', val=0.0)
-        self.add_input('idx_asavoadora_root', val=0.0)
-        self.add_input('idx_asavoadora_tip', val=0.0)
         self.add_input('idx_eh', val=0.0)
         self.add_input('idx_ev', val=0.0)
         self.add_input('idx_cn', val=0.0)
@@ -145,24 +143,22 @@ class Individual(om.ExplicitComponent):
             
             return database[chosen_name], msg # Retorna o dado E a mensagem
 
-        perfil_vazio = {'cl0': 0.0, 'cl_alpha': 0.0, 'cm0': 0.0, 'cd0': 0.0, 'name': 'vazio'}
-        dados_root = dados_tip = dados_eh = dados_ev = dados_canard = perfil_vazio
+        # 2. Carregamos SEMPRE a Asa (pois toda configuração tem asa)
+        dados_root, msg_root = definir_perfil(root_af, inputs['idx_asa_root'], LISTA_ASA, airfoils_database_asa, "Raiz da Asa")
+        dados_tip, msg_tip = definir_perfil(tip_af, inputs['idx_asa_tip'], LISTA_ASA, airfoils_database_asa, "Ponta da Asa")
+        print(msg_root)
+        print(msg_tip)
+        # 3. Lógica condicional de carregamento e impressão
+        # Inicializamos variáveis vazias/None para evitar erros
+        dados_eh = dados_ev = dados_canard = None
 
         if P_CONFIG == "asa_voadora":
             eh_b = ev_b = cn_b = 0.0
-            dados_root, msg_root = definir_perfil(root_af, inputs['idx_asavoadora_root'], LISTA_ASAVOADORA, airfoils_database_asavoadora, "Raiz da Asa")
-            dados_tip, msg_tip = definir_perfil(tip_af, inputs['idx_asavoadora_tip'], LISTA_ASAVOADORA  , airfoils_database_asavoadora, "Ponta da Asa")
-            print(msg_root)
-            print(msg_tip)
             print("🛸 Configuração: ASA VOADORA")
             # Não carrega nem printa EH, EV ou Canard
 
         elif P_CONFIG == "canard":
             # Carrega e printa tudo
-            dados_root, msg_root = definir_perfil(root_af, inputs['idx_asa_root'], LISTA_ASA, airfoils_database_asa, "Raiz da Asa")
-            dados_tip, msg_tip = definir_perfil(tip_af, inputs['idx_asa_tip'], LISTA_ASA, airfoils_database_asa, "Ponta da Asa")
-            print(msg_root)
-            print(msg_tip)
             dados_eh, msg_eh = definir_perfil(eh_af, inputs['idx_eh'], LISTA_EH, airfoils_database_eh, "EH")
             dados_ev, msg_ev = definir_perfil(ev_af, inputs['idx_ev'], LISTA_EV, airfoils_database_ev, "EV")
             dados_canard, msg_cn = definir_perfil(cn_af, inputs['idx_cn'], LISTA_EV, airfoils_database_ev, "Canard")
@@ -173,10 +169,6 @@ class Individual(om.ExplicitComponent):
 
         else: # CONVENCIONAL
             cn_b = 0.0
-            dados_root, msg_root = definir_perfil(root_af, inputs['idx_asa_root'], LISTA_ASA, airfoils_database_asa, "Raiz da Asa")
-            dados_tip, msg_tip = definir_perfil(tip_af, inputs['idx_asa_tip'], LISTA_ASA, airfoils_database_asa, "Ponta da Asa")
-            print(msg_root)
-            print(msg_tip)
             dados_eh, msg_eh = definir_perfil(eh_af, inputs['idx_eh'], LISTA_EH, airfoils_database_eh, "EH")
             dados_ev, msg_ev = definir_perfil(ev_af, inputs['idx_ev'], LISTA_EV, airfoils_database_ev, "EV")
             print(msg_eh)

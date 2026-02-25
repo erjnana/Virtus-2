@@ -21,8 +21,8 @@ PROJECT_NAME = f"{NAME}_{P_CONFIG}"
 # CONFIGURAÇÕES DO OTIMIZADOR
 # ============================================================
 
-OPTIMIZER_POP_SIZE = 40             # Tamanho da população
-OPTIMIZER_MAX_GEN = 999             # Número máximo de gerações
+OPTIMIZER_POP_SIZE = 35             # Tamanho da população
+OPTIMIZER_MAX_GEN = 120             # Número máximo de gerações
 OPTIMIZER_PENALTY_PARAM = 20.0      # Parâmetro de penalização das restrições
 OPTIMIZER_PENALTY_EXP = 1.0         # Expoente de penalização das restrições
 OPTIMIZER_DRIVER = "Differential Evolution Driver"  # Tipo de driver
@@ -141,22 +141,22 @@ if P_CONFIG == "convencional":
 
     DESIGN_VARIABLES = {
         'w_bt':     {'lower': 1.5,  'upper': 2.8},
-        'w_baf':    {'lower': 0.7, 'upper': 0.9},
-        'w_cr':     {'lower': 0.25, 'upper': 0.70},
+        'w_baf':    {'lower': 0.6, 'upper': 0.9},
+        'w_cr':     {'lower': 0.25, 'upper': 0.60},
         'w_ci':     {'lower': 0.60, 'upper': 0.90},
-        'w_ct':     {'lower': 0.5, 'upper': 0.8},
+        'w_ct':     {'lower': 0.5, 'upper': 0.9},
         'w_z':      {'lower': 0.15, 'upper': 0.3},
-        'w_inc':    {'lower': -2.0,  'upper': 3.0},
-        'w_wo':     {'lower': -5.0,  'upper': 7.0},
-        'w_d':      {'lower': 0,  'upper': 3},
+        'w_inc':    {'lower': -2.0,  'upper': 2.0},
+        'w_wo':     {'lower': -2.0,  'upper': 2.0},
+        'w_d':      {'lower': 0.0,  'upper': 5.0},
 
-        'eh_b':     {'lower': 0.5,  'upper': 1.0},
-        'eh_cr':    {'lower': 0.15, 'upper': 0.40},
-        'eh_ct':    {'lower': 0.7, 'upper': 1.0},
+        'eh_b':     {'lower': 0.4,  'upper': 1.0},
+        'eh_cr':    {'lower': 0.15, 'upper': 0.35},
+        'eh_ct':    {'lower': 0.6, 'upper': 1.0},
         'eh_inc':   {'lower': -3,  'upper': 3},
 
         'eh_x':     {'lower': 0.50, 'upper': 1.3},
-        'eh_z':     {'lower': 0.01, 'upper': 0.6},
+        'eh_z':     {'lower': 0.18, 'upper': 0.6},
 
         'ev_b':     {'lower': 0.3, 'upper': 0.5},
         'ev_ct':    {'lower': 0.7, 'upper': 0.95},
@@ -177,7 +177,7 @@ if P_CONFIG == "convencional":
     # ============================================================
 
     vht_min= 0.3        #Volume de cauda horizontal mínimo
-    vht_max= 0.6        #Volume de cauda horizontal máximo
+    vht_max= 0.7        #Volume de cauda horizontal máximo
     cm0_min= 0          #Cm0 mínimo
     cma_max= 0          #Cma máximo
     a_trim_min= 2       #Ângulo de trimagem mínimo
@@ -205,7 +205,7 @@ if P_CONFIG == "convencional":
     cp_min = 5.0
     g_const_max = 2.9
     g_const_min = 2.8
-    score_min = 125.00
+    score_min = 100.00
 
 # ========================= ========================= ========================= =========================
 # RESTRICÒES PARA AERONAVE CANARD
@@ -257,31 +257,31 @@ elif P_CONFIG == "canard":
 
     DESIGN_VARIABLES = {
         'w_bt':     {'lower': 1.5,  'upper': 2.8},
-        'w_baf':    {'lower': 0.7, 'upper': 0.9},
-        'w_cr':     {'lower': 0.25, 'upper': 0.70},
+        'w_baf':    {'lower': 0.6, 'upper': 0.9},
+        'w_cr':     {'lower': 0.25, 'upper': 0.60},
         'w_ci':     {'lower': 0.60, 'upper': 0.90},
-        'w_ct':     {'lower': 0.5, 'upper': 0.8},
+        'w_ct':     {'lower': 0.5, 'upper': 0.9},
         'w_z':      {'lower': 0.15, 'upper': 0.3},
-        'w_inc':    {'lower': -2.0,  'upper': 3.0},
-        'w_wo':     {'lower': -5.0,  'upper': 7.0},
-        'w_d':      {'lower': 0,  'upper': 3},
+        'w_inc':    {'lower': -2.0,  'upper': 2.0},
+        'w_wo':     {'lower': -2.0,  'upper': 2.0},
+        'w_d':      {'lower': 0.0,  'upper': 5.0},
 
-        'eh_b':     {'lower': 0.5,  'upper': 1.0},
-        'eh_cr':    {'lower': 0.15, 'upper': 0.40},
-        'eh_ct':    {'lower': 0.7, 'upper': 1.0},
+        'eh_b':     {'lower': 0.4,  'upper': 1.0},
+        'eh_cr':    {'lower': 0.15, 'upper': 0.35},
+        'eh_ct':    {'lower': 0.6, 'upper': 1.0},
         'eh_inc':   {'lower': -3,  'upper': 3},
 
         'eh_x':     {'lower': 0.50, 'upper': 1.3},
-        'eh_z':     {'lower': 0.01, 'upper': 0.6},
+        'eh_z':     {'lower': 0.18, 'upper': 0.6},
 
         'ev_b':     {'lower': 0.3, 'upper': 0.5},
         'ev_ct':    {'lower': 0.7, 'upper': 0.95},
 
-        'motor_x':  {'lower': -0.6, 'upper': -0.30},
+        'motor_x':  {'lower': -0.8, 'upper': -0.45},
 
         'cn_b': {'lower': 0.5, 'upper': 1.3},
         'cn_cr': {'lower': 0.15, 'upper': 0.35},
-        'cn_ct': {'lower': 0.3, 'upper': 1.0},
+        'cn_ct': {'lower': 0.4, 'upper': 1.0},
         'cn_inc': {'lower': 0.0, 'upper': 6.0},
         'cn_x': {'lower': -0.5, 'upper': -0.20},
         'cn_d': {'lower': -2.0, 'upper': 10.0},
@@ -293,7 +293,7 @@ elif P_CONFIG == "canard":
     # ============================================================
 
     vht_min= 0.3        #Volume de cauda horizontal mínimo
-    vht_max= 0.6        #Volume de cauda horizontal máximo
+    vht_max= 0.7        #Volume de cauda horizontal máximo
     cm0_min= 0          #Cm0 mínimo
     cma_max= 0          #Cma máximo
     a_trim_min= 2       #Ângulo de trimagem mínimo
@@ -311,8 +311,8 @@ elif P_CONFIG == "canard":
 
     a_trim_max = 5.0
     a_trim_min = -1.0
-    x_cg_p_max = 0.40
-    x_cg_p_min = 0.25
+    x_cg_p_max = 0.60
+    x_cg_p_min = 0.10
     me_max = 0.15
     me_min = 0.05
     ar_min = 4.8
@@ -321,7 +321,7 @@ elif P_CONFIG == "canard":
     cp_min = 5.0
     g_const_max = 2.9
     g_const_min = 2.8
-    score_min = 125.00
+    score_min = 100.00
 
 # ========================= ========================= ========================= =========================
 # RESTRICÒES PARA AERONAVE ASA VOADORA
