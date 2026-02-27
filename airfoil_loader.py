@@ -55,6 +55,7 @@ def load_airfoil(name):
 airfoils_database_asa = {} # Apenas assymmetric
 airfoils_database_eh = {}  # symmetric e inverted
 airfoils_database_ev = {}  # Apenas symmetric
+airfoil_database_cn = {}
 airfoils_database_asavoadora = {}
 
 base_path = "airfoils"
@@ -64,8 +65,8 @@ if base_dir.exists() and base_dir.is_dir():
     # Mapeamento de pastas para seus respectivos dicionários alvo
     # Pasta -> Lista de dicionários onde deve ser incluído
     mapping = {
-        "assymmetric": [airfoils_database_asa],
-        "symmetric": [airfoils_database_eh, airfoils_database_ev],
+        "assymmetric": [airfoils_database_asa], [airfoil_database_cn],
+        "symmetric": [airfoils_database_eh, airfoils_database_ev], [airfoil_database_cn],
         "inverted": [airfoils_database_eh], 
         "reflex": [airfoils_database_asavoadora]
     }
@@ -113,6 +114,7 @@ def select_airfoil(name_or_random, database, label="Componente"):
 LISTA_ASA = sorted(list(airfoils_database_asa.keys()))
 LISTA_EH  = sorted(list(airfoils_database_eh.keys()))
 LISTA_EV  = sorted(list(airfoils_database_ev.keys()))
+LISTA_CN  = sorted(list(airfoils_database_cn.keys()))
 LISTA_ASAVOADORA = sorted(list(airfoils_database_asavoadora.keys()))
 
-print(f"📦 Catálogo carregado: {len(LISTA_ASA)} perfis de Asa, {len(LISTA_EH)} de EH, {len(LISTA_EV)} de EV, {len(LISTA_ASAVOADORA)} de Asa Voadora.")
+print(f"📦 Catálogo carregado: {len(LISTA_ASA)} perfis de Asa, {len(LISTA_EH)} de EH, {len(LISTA_EV)} de EV, {len(LISTA_ASAVOADORA)} de Asa Voadora, {len(LISTA_CN)} de Canard.")
