@@ -65,8 +65,8 @@ if base_dir.exists() and base_dir.is_dir():
     # Mapeamento de pastas para seus respectivos dicionários alvo
     # Pasta -> Lista de dicionários onde deve ser incluído
     mapping = {
-        "assymmetric": [airfoils_database_asa, airfoil_database_cn],
-        "symmetric": [airfoils_database_eh, airfoils_database_ev, airfoil_database_cn],
+        "assymmetric": [airfoils_database_asa, airfoils_database_cn],
+        "symmetric": [airfoils_database_eh, airfoils_database_ev, airfoils_database_cn],
         "inverted": [airfoils_database_eh], 
         "reflex": [airfoils_database_asavoadora]
     }
