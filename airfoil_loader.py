@@ -55,7 +55,7 @@ def load_airfoil(name):
 airfoils_database_asa = {} # Apenas assymmetric
 airfoils_database_eh = {}  # symmetric e inverted
 airfoils_database_ev = {}  # Apenas symmetric
-airfoil_database_cn = {}
+airfoils_database_cn = {}
 airfoils_database_asavoadora = {}
 
 base_path = "airfoils"
@@ -66,7 +66,7 @@ if base_dir.exists() and base_dir.is_dir():
     # Pasta -> Lista de dicionários onde deve ser incluído
     mapping = {
         "assymmetric": [airfoils_database_asa, airfoil_database_cn],
-        "symmetric": [airfoils_database_eh, airfoils_database_ev], [airfoil_database_cn],
+        "symmetric": [airfoils_database_eh, airfoils_database_ev, airfoil_database_cn],
         "inverted": [airfoils_database_eh], 
         "reflex": [airfoils_database_asavoadora]
     }
