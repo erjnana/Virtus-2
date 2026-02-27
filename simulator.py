@@ -92,16 +92,20 @@ class Simulator():
                         return True, surf_name, perc_stall
 
             else:
-                # Para Eh e Canard (limite constante)
-                cl_limit = limits[surf_name]['cl_limit']
+                cl_limit = abs(limits[surf_name]['cl_limit'])
                 max_span = limits[surf_name]['span']
+
+                panels = sorted(zip(cl_list, yle_list),
+                                    key=lambda x: abs(x[1]),
+                                    reverse=True)
+
+                for cl_local, y_pos in panels:
+                    if abs(cl_local) >= cl_limit:
+                        perc_stall = (abs(y_pos) / (max_span/2)) * 100
+                        return True, surf_name, perc_stall
                 
                 for i, (cl_local, y_pos) in enumerate(zip(cl_list, yle_list)):
                     is_stalled = "ESTOL!!" if cl_local >= cl_limit else "OK"
-                    
-                    if cl_local >= cl_limit:
-                        perc_stall = (abs(y_pos) / (max_span/2)) * 100
-                        return True, surf_name, perc_stall
 
         return False, None, 0.0
 
