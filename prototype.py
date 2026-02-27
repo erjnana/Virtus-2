@@ -341,14 +341,14 @@ class Prototype:
         self.eh_root_section = Section(leading_edge_point=Point(eh_x, 0, eh_z),
                                         chord=eh_cr,
                                         airfoil= FileAirfoil(self.eh_af["dat_path"]),
-                                        controls= [self.elevator]
+                                        controls= [self.elevator],
                                         angle= self.eh_inc
                                         )
         
         self.eh_tip_section = Section(leading_edge_point=Point(eh_x + (eh_cr-eh_ct)/4, self.eh_b/2, eh_z),
                                         chord=eh_ct,
                                         airfoil= FileAirfoil(self.eh_af["dat_path"]),
-                                        controls= [self.elevator]
+                                        controls= [self.elevator],
                                         angle= self.eh_inc
                                         )
         
@@ -395,7 +395,7 @@ class Prototype:
             
             self.cn_tip_section = Section(leading_edge_point=Point(self.cn_x, self.cn_b/2, z_tip_cn),
                                         chord=self.cn_ct,
-                                        airfoil=FileAirfoil(self.cn_af["dat_path"])
+                                        airfoil=FileAirfoil(self.cn_af["dat_path"]),
                                         angle=self.cn_inc
             )
 
