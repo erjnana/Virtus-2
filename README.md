@@ -1,10 +1,12 @@
 ========================= DESCRIÇÃO =========================
 
-Este repositório contém o projeto do programa de Otimização Multidisciplinar desenvolvido para a equipe Minerva Aerodesign da UFRJ para o projeto de aeronaves destinadas à competição SAE Aerodesign.
+Este repositório contém o projeto do programa de Otimização Multidisciplinar desenvolvido para a equipe Minerva Aerodesign da UFRJ para o projeto de aeronaves destinadas à competição SAE Brasil AeroDesign.
 
 O início do desenvolvimento se deu na fase inicial da competição de 2023, porém com o intuito de servir ao futuro da equipe.
 
-A função do programa é otimizar a geometria de uma aeronave de modo a obter uma maior pontuação e satisfazendo as restrições necessárias. O programa atual está configurado baseado no regulamento de 2026.
+A função do programa é otimizar a geometria de uma aeronave de modo a obter uma maior pontuação e satisfazendo as restrições necessárias. 
+
+Ao final de 2025, se iniciou um movimento de buscas para aperfeiçoamento e atualização do Virtus, englobando novas possibilidades, aumentando a integração com topdas as áreas e com a intenção de aprimorar cada vez mais o programa. Dessa forma, nasceu o Virtus 2. Atualmente, o Virtus 2 passa por atualizações semanais que contam com cada vez mais detalhes. Sua primeira versão oficial foi lançada em 24/02/2026 e o programa atual está configurado baseado no regulamento de 2026.
 
 O programa tem base em 2 pacotes:
 
@@ -15,11 +17,9 @@ A geometria é definida no código "prototype.py", que recebe os parâmetros des
 
 No arquivo "simulator.py", se inserem todos os métodos para rodar, a partir de um indivíduo prototype(), todas as simulações necessárias e calcular todos os coeficientes de aerodinâmica, estabilidade e desempenho, incluindo a pontuação pela qual se deseja avaliar cada indivíduo.
 
-Os arquivos "individual.py" e "optimizer.py" adaptam toda a construção e simulação para a otimização
+Os arquivos "individual.py" e "optimizer.py" adaptam toda a construção e simulação para a otimização.
 
 "performance.py" e "stability.py" são bibliotecas que contém todas as funções, cálculos e verificações das suas respectivas áreas.
-
-O fluxograma junto do repositório mostra a estrutura básica do funcionamento.
 
 O notebook "viewer.ipynb" possibilita a visualização gráfica da evolução dos indivíduos em termos de objetivos e restrições.
 
@@ -28,6 +28,7 @@ O script "post_processing" foi criado para incluir todas as funções de pós pr
 Autores: 
 
 Lucas Alves da Rosa (lucas.rosa@poli.ufrj.br)
+
 Ana Luiza Silva Duarte (als.duarte.20232@poli.ufrj.br)
 
 ========================= INSTRUÇÕES DE INSTALAÇÃO =========================
@@ -55,30 +56,30 @@ P.S.: Para configurar no Ubuntu, Primeiro instalar o anaconda e fazer o mesmo + 
 
 Para rodar o Virtus 2, baixe a pasta completa pelo GitHub. Deixe-a em alguma pasta local do seu computador, caso você deixe em alguma pasta online (OneDrive, Google Drive, etc) o programa pode não funcionar.
 
-N console do Anaconda abra o VSCode (sempre abra por dentro do Anaconda). Nas abas superiores selecione File > Open Folder... > pasta do Virtus 2. Agora você deve estar com todos os arquivos do Virtus 2 carregados em seu VSCode.
+No console do Anaconda abra o VSCode (sempre abra pelo Anaconda). Nas abas superiores selecione File > Open Folder... > pasta do Virtus 2. Agora você deve estar com todos os arquivos do Virtus 2 carregados em seu VSCode.
 
 Caso seja sua primeira vez rodando o Virtus, é necessário retirar os arquivos de aerofólios (.dat) da pasta ./dats e colocá-los no diretório raiz do programa (./). Caso contrário, o programa não funcionará.
 
 Todas as restrições da sua aeronave devem ser alteradas no arquivo variables.py. Nesse arquivo, é possível alterar informações como:
 - Configuração da aeronave;
 - Fatores de pontuação;
-- Restricões do regulamento;
+- Restrições do regulamento;
 - Perfis dos componentes da aeronave;
-- Restrições geométricas para cada tipo de configuracão;
+- Restrições geométricas para cada tipo de configuração;
 - Restrições de estabilidade;
 - Configurações de otimização;
-- Requisitos de validacão,
+- Requisitos de validação,
 - Etc.
 
 PS.: No momento, a configuração de Asa Voadora não está funcionando.
 
-Atente-se ao fato de que existem secões diferentes para cada tipo de configuracão de aeronave. Cada uma corresponde às variáveis definidas exclusivamente para aquela configuracão. As variáveis estão comentadas para fácil entendimento, você também poderá definir o nome do projeto para melhor identificação na análise dos logs.
+Atente-se ao fato de que existem seções diferentes para cada tipo de configuração de aeronave. Cada uma corresponde às variáveis definidas exclusivamente para aquela configuração. As variáveis estão comentadas para fácil entendimento, você também poderá definir o nome do projeto para melhor identificação na análise dos logs.
 
 Para prosseguir para a execução do programa, dê run no arquivo optimizer.py. No seu terminal, aparecerão informações de carregamentos dos aerofólios e, logo em seguida, a otimização deverá começar a rodar. 
 
-Eventualmente poderá aparecer alguma mensagem do tipo "⚠️ Erro ao carregar 'nome do perfil': mensagem de erro", isso é normal e significa somente que há alguma informacão faltando para o perfil correspondente, o perfil será desconsiderado e a otimizacão seguirá normalmente.
+Eventualmente poderá aparecer alguma mensagem similar a "⚠️ Erro ao carregar 'nome do perfil': mensagem de erro", isso é normal e significa que há alguma informação faltando para o perfil correspondente, o perfil será desconsiderado e a otimização seguirá normalmente.
 
-Mensagens do tipo "  d_sol, d_sol_res= quad(f_d_sol, 0, v_decol, args=(p, t, m, s, clc, clmax, cdc, pot, g, mu), limit= 100)" também poderão aparecer, porém não significam qualquer problema e o programa seguirá normalmente.
+Mensagens do tipo " d_sol, d_sol_res= quad(f_d_sol, 0, v_decol, args=(p, t, m, s, clc, clmax, cdc, pot, g, mu), limit= 100)" também poderão aparecer, porém não significam qualquer problema e o programa seguirá normalmente.
 
 
 Na pasta ./log/evolutions você poderá acessar um arquivo .txt referente à otimização. No nome do arquivo está o nome do projeto configurado no variables.py, o tipo de configuração da aeronave e o horário de início de execução para fácil catalogação.
@@ -91,9 +92,9 @@ Há também, na mesma pasta, um arquivo de mesmo nome com final .db. Este arquiv
 
 O viewer.py não atualiza em tempo real. Por isso, toda vez que você quiser atualizar será necessário rodar novamente a segunda parte do código.
 
-O arquivo .db também serve para fazer o processamento final dos indivíduos válidos (dentro dos critérios definidos na sessão REQUISITOS PARA INDIVÍDUOS VÁLIDOS do variables.py). Para isso, abra o arquivo post_processing.py e, na linha 10, insira o nome do arquivo que você gostaria de analisar (com final .db) e rode o arquivo.
+O arquivo .db também serve para fazer o processamento final dos indivíduos válidos dentro dos critérios definidos na sessão REQUISITOS PARA INDIVÍDUOS VÁLIDOS do variables.py. Para isso, abra o arquivo post_processing.py e, na linha 10, insira o nome do arquivo que você gostaria de analisar (com final .db) e rode o arquivo.
 
-Na pasta ./log/post_processing você terá acesso ao arquivo post_(nome do arquivo original).txt com todos os indivíduos da sua otimizacão que se enquadram nos requisitos que estipulou.
+Na pasta ./log/post_processing você terá acesso ao arquivo post_(nome do arquivo original).txt com todos os indivíduos da sua otimização que se enquadram nos requisitos que estipulou.
 
 
 Caso você queira adicionar novos aerofólios ao banco de dados para utilizá-los:
