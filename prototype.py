@@ -294,8 +294,8 @@ class Prototype:
         # ====================================================
         self.w_root_clmax = self.root_af['cl_max'] if self.root_af else 1.2
         self.w_tip_clmax  = self.tip_af['cl_max'] if self.tip_af else 1.2
-        self.w_eh_clmax   = self.eh_af['cl_max'] if self.eh_af else 0.0
-        self.w_ev_clmax   = self.ev_af['cl_max'] if self.ev_af else 0.0
+        self.eh_clmax   = self.eh_af['cl_max'] if self.eh_af else 0.0
+        self.ev_clmax   = self.ev_af['cl_max'] if self.ev_af else 0.0
         self.cn_clmax     = self.cn_af['cl_max'] if self.cn_af else 0.0
 
         # ====================================================
