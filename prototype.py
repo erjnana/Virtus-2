@@ -342,12 +342,14 @@ class Prototype:
                                         chord=eh_cr,
                                         airfoil= FileAirfoil(self.eh_af["dat_path"]),
                                         controls= [self.elevator]
+                                        angle= self.eh_inc
                                         )
         
         self.eh_tip_section = Section(leading_edge_point=Point(eh_x + (eh_cr-eh_ct)/4, self.eh_b/2, eh_z),
                                         chord=eh_ct,
                                         airfoil= FileAirfoil(self.eh_af["dat_path"]),
                                         controls= [self.elevator]
+                                        angle= self.eh_inc
                                         )
         
         self.ev_root_section = Section(leading_edge_point=Point(ev_x, 0, ev_z),
@@ -367,7 +369,6 @@ class Prototype:
                                     span_spacing=Spacing.equal,
                                     y_duplicate=0.0,
                                     sections=[self.eh_root_section, self.eh_tip_section],
-                                    angle= self.eh_inc
                                     )
         
         self.ev_surface = Surface(name="Vertical_Stabilizer",
@@ -389,11 +390,13 @@ class Prototype:
             self.cn_root_section = Section(leading_edge_point=Point(self.cn_x, 0, self.cn_z),
                                         chord=self.cn_cr,
                                         airfoil=FileAirfoil(self.cn_af["dat_path"])
+                                        angle=self.cn_inc
             )
             
             self.cn_tip_section = Section(leading_edge_point=Point(self.cn_x, self.cn_b/2, z_tip_cn),
                                         chord=self.cn_ct,
                                         airfoil=FileAirfoil(self.cn_af["dat_path"])
+                                        angle=self.cn_inc
             )
 
             self.canard_surface = Surface(
@@ -404,7 +407,6 @@ class Prototype:
                 span_spacing=Spacing.equal,
                 y_duplicate=0.0,
                 sections=[self.cn_root_section, self.cn_tip_section],
-                angle=self.cn_inc
             )
 
 ############################################# Definição da geometria com e sem o efeito solo (método das imagens) #############################################
@@ -421,7 +423,6 @@ class Prototype:
                 span_spacing=Spacing.equal,
                 y_duplicate=0.0,
                 sections=[self.eh_root_section, self.eh_tip_section],
-                angle=self.eh_inc
             )
             surfaces_list.append(self.eh_surface)
         else:
@@ -451,7 +452,6 @@ class Prototype:
                 span_spacing=Spacing.equal,
                 y_duplicate=0.0,
                 sections=[self.cn_root_section, self.cn_tip_section],
-                angle=self.cn_inc
             )
             surfaces_list.append(self.canard_surface)
         else:
