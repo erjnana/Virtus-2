@@ -2,7 +2,7 @@ import openmdao.api as om
 from prototype import Prototype
 from simulator import Simulator
 from variables import *
-from airfoil_loader import (LISTA_ASA, LISTA_EH, LISTA_EV, airfoils_database_asa, airfoils_database_eh, airfoils_database_ev)
+from airfoil_loader import (LISTA_ASA, LISTA_EH, LISTA_EV, LISTA_CN, airfoils_database_asa, airfoils_database_eh, airfoils_database_ev, airfoils_database_cn)
 
 class Individual(om.ExplicitComponent):
     """
