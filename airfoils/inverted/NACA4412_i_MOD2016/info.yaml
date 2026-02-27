@@ -23,7 +23,7 @@ summary:
   cl_0: 0.73
   cl_alpha: 5.921              # 1/rad
   cl_max: 0.50
-  alpha_cl_max: 20.0
+  alpha_cl_max: 12.0
   cm_0: 0.164
 
 validation:

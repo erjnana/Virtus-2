@@ -21,10 +21,10 @@ PROJECT_NAME = f"{NAME}_{P_CONFIG}"
 # CONFIGURAÇÕES DO OTIMIZADOR
 # ============================================================
 
-OPTIMIZER_POP_SIZE = 35             # Tamanho da população
-OPTIMIZER_MAX_GEN = 120             # Número máximo de gerações
-OPTIMIZER_PENALTY_PARAM = 20.0      # Parâmetro de penalização das restrições
-OPTIMIZER_PENALTY_EXP = 1.0         # Expoente de penalização das restrições
+OPTIMIZER_POP_SIZE = 40             # Tamanho da população
+OPTIMIZER_MAX_GEN = 105             # Número máximo de gerações
+OPTIMIZER_PENALTY_PARAM = 2500.0      # Parâmetro de penalização das restrições
+OPTIMIZER_PENALTY_EXP = 2.0         # Expoente de penalização das restrições
 OPTIMIZER_DRIVER = "Differential Evolution Driver"  # Tipo de driver
 
 # =========================
@@ -50,9 +50,9 @@ pot = 600.0     # Potência máxima do motor (W)
 
 root_af='random'            # Perfil da raiz da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
 tip_af='random'             # Perfil da ponta da asa (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
-eh_af='random'            # Perfil do EH (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
-ev_af ='random'           # Perfil do EV (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
-cn_af = 'random'          # Perfil do canard (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+eh_af='NACA4412_i_MOD2016'            # Perfil do EH (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+ev_af ='NACA0012'           # Perfil do EV (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
+cn_af = 'NACA0012'          # Perfil do canard (insira o nome da pasta do perfil para manter fixo ou "random" para otimizar)
 
 # =========================
 # INPUTS DO INDIVÍDUO
@@ -124,7 +124,7 @@ if P_CONFIG == "convencional":
         'eh_x': 0.8,        #distância do eh
         'eh_z': 0.4,        #altura do eh
 
-        'motor_x': -0.4,    #distância do motor
+        'motor_x': -0.3,    #distância do motor (em relação ao bordo de ataque da asa)
 
         'cn_b': 0.0,          #envergadura do canard
         'cn_cr': 0.0,       #corda da raiz do canard
@@ -132,7 +132,7 @@ if P_CONFIG == "convencional":
         'cn_inc': 0.0,      #incidência do canard
         'cn_x': 0.0,       #distância do canard (em relação à asa)
         'cn_d': 0.0,        #diedro do canard
-        'cn_z': 0.0,        #altura do canard (em relação à asa)
+        'cn_z': 0.0,        #altura do canard (em relação ao bordo de ataque da asa)
     }
 
     # =========================
@@ -161,7 +161,7 @@ if P_CONFIG == "convencional":
         'ev_b':     {'lower': 0.3, 'upper': 0.5},
         'ev_ct':    {'lower': 0.7, 'upper': 0.95},
 
-        'motor_x':  {'lower': -0.6, 'upper': -0.30},
+        'motor_x':  {'lower': -0.6, 'upper': -0.20},
 
         'cn_b': {'lower': 0.0,  'upper': 0.0},
         'cn_cr': {'lower': 0.0,  'upper': 0.0},
@@ -200,6 +200,7 @@ if P_CONFIG == "convencional":
     me_max = 0.15
     me_min = 0.05
     ar_min = 4.8
+    ar_eh_max = 5.0
     vht_max = 0.8
     vvt_min = 0.04
     cp_min = 5.0
@@ -240,13 +241,13 @@ elif P_CONFIG == "canard":
         'eh_x': 0.8,        #distância do eh
         'eh_z': 0.4,        #altura do eh
 
-        'motor_x': -0.4,    #distância do motor
+        'motor_x': -0.2,    #distância do motor (em relacão ao bordo de ataque do canard)
 
         'cn_b': 1.0,          #envergadura do canard
         'cn_cr': 0.2,       #corda da raiz do canard
         'cn_ct': 0.8,      #corda da ponta do canard (% da raiz)
         'cn_inc': 3.0,      #incidência do canard
-        'cn_x': -0.3,       #distância do canard (em relação à asa)
+        'cn_x': -0.1,       #distância do canard (em relação ao bordo de ataque asa)
         'cn_d': 1.0,        #diedro do canard
         'cn_z': 0.2,        #altura do canard (em relação à asa)
     }
@@ -277,13 +278,13 @@ elif P_CONFIG == "canard":
         'ev_b':     {'lower': 0.3, 'upper': 0.5},
         'ev_ct':    {'lower': 0.7, 'upper': 0.95},
 
-        'motor_x':  {'lower': -0.8, 'upper': -0.45},
+        'motor_x':  {'lower': -0.6, 'upper': -0.10},
 
         'cn_b': {'lower': 0.5, 'upper': 1.3},
         'cn_cr': {'lower': 0.15, 'upper': 0.35},
         'cn_ct': {'lower': 0.4, 'upper': 1.0},
         'cn_inc': {'lower': 0.0, 'upper': 6.0},
-        'cn_x': {'lower': -0.5, 'upper': -0.20},
+        'cn_x': {'lower': -0.3, 'upper': -0.05},
         'cn_d': {'lower': -2.0, 'upper': 10.0},
         'cn_z': {'lower': 0.05, 'upper': 0.4},
     }
@@ -316,6 +317,7 @@ elif P_CONFIG == "canard":
     me_max = 0.15
     me_min = 0.05
     ar_min = 4.8
+    ar_eh_max = 5.0
     vht_max = 0.8
     vvt_min = 0.04
     cp_min = 5.0
@@ -432,6 +434,7 @@ elif P_CONFIG == "asa_voadora":
     me_max = 0.15
     me_min = 0.05
     ar_min = 4.8
+    ar_eh_max = 5.0
     vht_max = 0.8
     vvt_min = 0.04
     cp_min = 5.0

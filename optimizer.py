@@ -139,25 +139,39 @@ for var_name, bounds in DESIGN_VARIABLES.items():
 
 # O objetivo é maximizar o score do indivíduo
 # OpenMDAO sempre minimiza, então usamos scaler negativo
-prob.model.add_objective(
-    'individual_scorer.score',
-    scaler=-1.0
+# prob.model.add_objective(
+#     'individual_scorer.score',
+#     scaler=-1.0
+# )
+prob.model.add_subsystem(
+    'score_passthrough',
+    om.ExecComp('neg_score = -score'),
+    promotes_inputs=[('score', 'individual_scorer.score')],
+    promotes_outputs=['neg_score']
 )
+
+prob.model.add_objective('neg_score')
+
 
 # =========================
 # RESTRIÇÕES
 # =========================
 
+prob.model.add_constraint(
+    'individual_scorer.score',
+    upper=200,
+)
+
 # Relação de aspecto mínima da asa
 prob.model.add_constraint(
     'individual_scorer.ar',
-    lower=5.0
+    lower= ar_min
 )
 
 # Relação de aspecto máxima do estabilizador horizontal
 prob.model.add_constraint(
     'individual_scorer.eh_ar',
-    upper=4.8
+    upper= ar_eh_max
 )
 
 # Volume de cauda horizontal
@@ -205,8 +219,8 @@ prob.model.add_constraint(
 # Posição do CG percentual da corda média
 prob.model.add_constraint(
     'individual_scorer.x_cg_p',
-    lower=0.25,
-    upper=0.34,
+    lower= x_cg_p_min,
+    upper= x_cg_p_max,
     scaler=0.0
 )
 
@@ -233,7 +247,7 @@ print(r"""                                        ____   ____.__         __     
                                           \     /  |  ||  | \/|  | |  |  /\___ \  /       \ 
                                            \___/   |__||__|   |__| |____//______/ \________|""",
       "\n                                             Bem-vindo ao MDO Virtus da Minerva Aerodesign!", 
-      "\n                                                        VVer. 2.0 de 24/02/2026", 
+      "\n                                                        Ver. 2.0.1 de 25/02/2026", 
       "\n                                            Autores: Lucas A. da Rosa e Ana Luiza S. Duarte")
 print("\n===============================================================================================================================================================")
 print("\n                                                ==== Configurações de Indivíduo ====",

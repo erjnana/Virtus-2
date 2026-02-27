@@ -207,14 +207,17 @@ class Prototype:
         self.cn_cr = cn_cr
         self.cn_ct = cn_ct
         self.cn_inc = cn_inc
-        self.cn_x = cn_x
+        self.cn_x = cn_x + cn_cr
         self.cn_z = cn_z
         self.cn_d = cn_d
 
         # ====================================================
         # MOTOR
         # ====================================================
-        self.motor_x= motor_x       # Posição horizontal do motor. Vai ser negativa em uma configuração convencional
+        if P_CONFIG == "canard":
+            self.motor_x = motor_x + cn_x       # Posição horizontal do motor. Vai ser negativa em uma configuração convencional
+        else:
+            self.motor_x = motor_x
         self.motor_z= motor_z       # Posição vertical do motor
         self.pot= pot             # Potência do motor em W
 

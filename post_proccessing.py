@@ -57,7 +57,7 @@ print(r"""                                        ____   ____.__         __     
                                           \     /  |  ||  | \/|  | |  |  /\___ \  /       \ 
                                            \___/   |__||__|   |__| |____//______/ \________|""",
       "\n                                             Bem-vindo ao MDO Virtus da Minerva Aerodesign!", 
-      "\n                                                        Ver. 2.0 de 24/02/2026", 
+      "\n                                                        Ver. 2.0.1 de 25/02/2026", 
       "\n                                            Autores: Lucas A. da Rosa e Ana Luiza S. Duarte")
 print("\n===============================================================================================================================================================")
 print("\n                                                ==== Critérios de Validacão de Indivíduo ====")
@@ -68,6 +68,7 @@ print(" Posicão horizontal mínima do GC =", x_cg_p_min)
 print(" Margem Estática Máxima =", me_max)
 print(" Margem Estática Mínima =", me_min)
 print(" AR Mínimo =", ar_min)
+print(" AR do EH Máximo =", ar_eh_max)
 print(" Volume horizontal de cauda máximo =", vht_max)
 print(" Volume vertical de cauda mínimo =", vvt_min)
 print(" Carga Paga Mínima =", cp_min)
