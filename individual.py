@@ -161,7 +161,7 @@ class Individual(om.ExplicitComponent):
             # Carrega e printa tudo
             dados_eh, msg_eh = definir_perfil(eh_af, inputs['idx_eh'], LISTA_EH, airfoils_database_eh, "EH")
             dados_ev, msg_ev = definir_perfil(ev_af, inputs['idx_ev'], LISTA_EV, airfoils_database_ev, "EV")
-            dados_canard, msg_cn = definir_perfil(cn_af, inputs['idx_cn'], LISTA_EV, airfoils_database_ev, "Canard")
+            dados_canard, msg_cn = definir_perfil(cn_af, inputs['idx_cn'], LISTA_CN, airfoils_database_cn, "Canard")
             print(msg_eh)
             print(msg_ev)
             print(msg_cn)
